@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using ElectronicComponentsShop.Database;
 
 namespace ElectronicComponentsShop
 {
@@ -24,6 +26,18 @@ namespace ElectronicComponentsShop
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            bool IsDevelopment = (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development");
+            Action<DbContextOptionsBuilder> optionsAction = options => options.UseNpgsql(Configuration.GetConnectionString("PgSqlConnection"));
+            if (!IsDevelopment)
+            {
+                string connectionUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+                var databaseUri = new Uri(connectionUrl);
+                string db = databaseUri.LocalPath.TrimStart('/');
+                string[] userInfo = databaseUri.UserInfo.Split(':', StringSplitOptions.RemoveEmptyEntries);
+                string connectionString = $"User ID={userInfo[0]};Password={userInfo[1]};Host={databaseUri.Host};Port={databaseUri.Port};Database={db};Pooling=true;SSL Mode=Require;Trust Server Certificate=True;";
+                optionsAction = options => options.UseNpgsql(connectionString);
+            }
+            services.AddDbContext<ECSDbContext>(optionsAction);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
