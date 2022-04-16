@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using ElectronicComponentsShop.DTOs;
 namespace ElectronicComponentsShop.Entities
 {
     public class Product
@@ -11,6 +11,7 @@ namespace ElectronicComponentsShop.Entities
         public string Name { get; set; }
         public string Slug { get; set; }
         public decimal? Price { get; set; }
+        public int Views { get; set; }
         public string Description { get; set; }
         public DateTime CreatedAt { get; set; }
         public Nullable<DateTime> ModifiedAt { get; set; }

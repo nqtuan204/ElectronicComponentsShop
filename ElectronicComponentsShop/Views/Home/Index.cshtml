@@ -1,8 +1,54 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@model HomeVM
+<!-- SECTION -->
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <!-- row -->
+        <div class="row">
+            @foreach (var Category in Model.Categories)
+            {
+                <!-- shop -->
+                <div class="col-md-3 col-xs-3">
+                    <div class="shop">
+                        <div class="shop-img">
+                            <img src="@Category.ThumbnailURL" alt="">
+                        </div>
+                        <div class="shop-body">
+                            <h3>@Category.Name </h3>
+                            <h4 style="color: white">(@Category.NumberOfProducts)</h4>
+                            <a href="@Category.URL" class="cta-btn">Chi tiết <i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <!-- /shop -->
+            }
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
 </div>
+<!-- /SECTION -->
+
+@foreach (var carousel in Model.ProductCarousels)
+{
+    <!-- SECTION -->
+    <div class="section">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                @*<partial name="_ProductCarousel" model="@carousel" />*@
+                @{await Html.RenderPartialAsync("_ProductCarousel", carousel); }
+
+            </div>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+    </div>
+    <!-- /SECTION -->
+
+}
+

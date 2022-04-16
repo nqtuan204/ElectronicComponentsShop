@@ -1,0 +1,32 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@model ProductCarouselVM
+    <!-- section title -->
+<div class="col-md-12">
+    <div class="section-title">
+        <h3 class="title">@Model.Title</h3>
+    </div>
+</div>
+<!-- /section title -->
+<!-- Products tab & slick -->
+<div class="col-md-12">
+    <div class="row">
+        <div class="products-tabs">
+            <!-- tab -->
+            <div id="tab@(Model.Id)" class="tab-pane active">
+                <div class="products-slick" data-nav="#slick-nav-@(Model.Id)">
+                    @foreach (var product in Model.Products)
+                    {
+                        @*<partial name="_Product" model="@product" />*@
+                        await Html.RenderPartialAsync("_Product", product);
+                    }
+                </div>
+                <div id="slick-nav-@(Model.Id)" class="products-slick-nav"></div>
+            </div>
+            <!-- /tab -->
+        </div>
+    </div>
+</div>
+<!-- Products tab & slick -->

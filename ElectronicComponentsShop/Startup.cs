@@ -10,6 +10,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ElectronicComponentsShop.Database;
+using ElectronicComponentsShop.Services.Product;
+using ElectronicComponentsShop.Services.Category;
 
 namespace ElectronicComponentsShop
 {
@@ -38,6 +40,8 @@ namespace ElectronicComponentsShop
                 optionsAction = options => options.UseNpgsql(connectionString);
             }
             services.AddDbContext<ECSDbContext>(optionsAction);
+            services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<ICategoryService, CategoryService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,6 +66,10 @@ namespace ElectronicComponentsShop
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute(
+                    name: "product list",
+                    pattern: "/product/list",
+                    defaults: new { controller = "Product", action = "List" });
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
