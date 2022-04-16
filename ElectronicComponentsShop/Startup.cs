@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using ElectronicComponentsShop.Services.Jwt;
+using ElectronicComponentsShop.Services.Cart;
 
 namespace ElectronicComponentsShop
 {
@@ -49,6 +50,7 @@ namespace ElectronicComponentsShop
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IJwtService, JwtService>();
+            services.AddTransient<ICartService, CartService>();
             services.AddAuthentication("Bearer").AddJwtBearer("Bearer", options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters()
