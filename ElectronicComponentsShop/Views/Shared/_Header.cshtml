@@ -1,4 +1,13 @@
-﻿<!-- HEADER -->
+﻿@using System.IdentityModel.Tokens.Jwt;
+@{ var token = "";
+    string UserName = "";
+    if (ViewContext.HttpContext.Request.Cookies.TryGetValue("token", out token))
+    {
+        JwtSecurityToken jwtSecurityToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
+        UserName = jwtSecurityToken.Claims.First(c => c.Type == "Name").Value;
+    }
+}
+<!-- HEADER -->
 <header>
     <!-- TOP HEADER -->
     <div id="top-header">
@@ -9,8 +18,16 @@
                 <li><a href="#"><i class="fa fa-map-marker"></i> 1734 Stonecoal Road</a></li>
             </ul>
             <ul class="header-links pull-right">
-                <li><a href="#"><i class="fa fa-dollar"></i> USD</a></li>
-                <li><a href="#"><i class="fa fa-user-o"></i> My Account</a></li>
+                @if (!String.IsNullOrEmpty(UserName))
+                {
+                    <li><a href="/User/Profile"><i class="fa fa-user-o"></i> @UserName</a></li>
+                    <li><a href="/User/Logout"> Đăng xuất</a></li>
+                }
+                else
+                {
+                    <li><a href="/User/Login"><i class="fa fa-user-o"></i> Đăng nhập</a></li>
+                    <li><a href="/User/Register"> Đăng ký</a></li>
+                }
             </ul>
         </div>
     </div>
@@ -25,7 +42,7 @@
                 <div class="col-md-3">
                     <div class="header-logo">
                         <a href="#" class="logo">
-                            <img src="./img/logo.png" alt="">
+                            <img src="" alt="">
                         </a>
                     </div>
                 </div>
@@ -68,7 +85,7 @@
                                 <div class="cart-list">
                                     <div class="product-widget">
                                         <div class="product-img">
-                                            <img src="./img/product01.png" alt="">
+                                            <img src="" alt="">
                                         </div>
                                         <div class="product-body">
                                             <h3 class="product-name"><a href="#">product name goes here</a></h3>

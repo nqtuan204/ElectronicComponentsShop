@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ElectronicComponentsShop.DTOs;
 
 namespace ElectronicComponentsShop.Entities
 {
@@ -21,5 +22,18 @@ namespace ElectronicComponentsShop.Entities
         public IEnumerable<CartItem> CartItems { get; set; }
         public IEnumerable<Favourite> Favourites { get; set; }
         public IEnumerable<Review> Reviews { get; set; }
+        public User() { }
+
+        public User(NewUserDTO dto)
+        {
+            PhoneNumber = dto.PhoneNumber;
+            Email = dto.Email;
+            Password = dto.Password;
+            Password2 = dto.Password2;
+            FirstName = dto.FirstName;
+            LastName = dto.LastName;
+            CreatedAt = DateTime.Now;
+
+        }
     }
 }

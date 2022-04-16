@@ -12,6 +12,11 @@ using Microsoft.EntityFrameworkCore;
 using ElectronicComponentsShop.Database;
 using ElectronicComponentsShop.Services.Product;
 using ElectronicComponentsShop.Services.Category;
+using ElectronicComponentsShop.Services.User;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using ElectronicComponentsShop.Services.Jwt;
 
 namespace ElectronicComponentsShop
 {
@@ -42,6 +47,29 @@ namespace ElectronicComponentsShop
             services.AddDbContext<ECSDbContext>(optionsAction);
             services.AddTransient<IProductService, ProductService>();
             services.AddTransient<ICategoryService, CategoryService>();
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IJwtService, JwtService>();
+            services.AddAuthentication("Bearer").AddJwtBearer("Bearer", options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidateLifetime = true,
+                    ValidIssuer = Configuration["Jwt:Issuer"],
+                    ValidAudience = Configuration["Jwt:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(Configuration["Jwt:SecurityKey"])),
+                };
+            });
+
+            services.AddAuthorization(config =>
+            {
+                config.AddPolicy("OnlyUser", policyConfig =>
+                {
+                    policyConfig.RequireClaim("Role", "Customer");
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,8 +87,25 @@ namespace ElectronicComponentsShop
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
+
+            app.Use((context, next) =>
+            {
+                string token = "";
+                if (context.Request.Cookies.TryGetValue("token", out token))
+                    context.Request.Headers.Add("Authorization", $"Bearer {token}");
+                return next();
+            });
+
+            app.UseAuthentication();
+
+            app.UseStatusCodePages(async context =>
+            {
+                var response = context.HttpContext.Response;
+
+                if (response.StatusCode == 401)
+                    response.Redirect("/User/Login");
+            });
 
             app.UseAuthorization();
 

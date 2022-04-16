@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ElectronicComponentsShop.Services.Category;
 using ElectronicComponentsShop.Services.Product;
-using ElectronicComponentsShop.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ElectronicComponentsShop.Controllers
 {
@@ -24,7 +24,7 @@ namespace ElectronicComponentsShop.Controllers
             _categorySv = categorySv;
             _productSv = productSv;
         }
-
+        
         public IActionResult Index()
         {
             var categories = _categorySv.GetCategories().Select(c => new CategoryVM(c));
