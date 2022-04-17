@@ -56,7 +56,7 @@ var renderCart = (items) => {
 }
 
 function totalQuantity(items) {
-    return items.map(item => item.quantity).reduce((sum = 0, quantity) => sum + quantity);
+    return items.map(item => parseInt(item.quantity)).reduce((sum = 0, quantity) => sum + quantity);
 }
 
 function amount(items) {
