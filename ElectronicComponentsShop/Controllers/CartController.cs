@@ -27,11 +27,11 @@ namespace ElectronicComponentsShop.Controllers
 
         // GET: CartController/Details/5
         [Authorize]
-        public async Task<ActionResult> Get()
+        public async Task<IEnumerable<CartItemDTO>> GetItems()
         {
             var userId = GetUserId();
-            CartDTO cart = await _cartSv.GetCart(userId);
-            return Ok(cart);
+            var items = await _cartSv.GetItems(userId);
+            return items;
         }
 
         private int GetUserId()
@@ -41,10 +41,38 @@ namespace ElectronicComponentsShop.Controllers
             return userId;
         }
 
-        public async Task<ActionResult> Add(int productId, int quantity)
+        [Authorize]
+        public async Task<IEnumerable<CartItemDTO>> AddItem(int id)
         {
             var userId = GetUserId();
-            await _cartSv.Add(userId, productId, quantity);
+            await _cartSv.AddItem(userId, id);
+            var items = await _cartSv.GetItems(userId);
+            return items;
+        }
+
+        
+        [Authorize]
+        [HttpPost]
+        public async Task<ActionResult> Update([FromBody] CartDTO cart)
+        {
+            var userId = GetUserId();
+            await _cartSv.Update(userId, cart.Items);
+            return Ok(cart.Items);
+        }
+
+        [Authorize]
+        public async Task<ActionResult> RemoveAll(int id)
+        {
+            var userId = GetUserId();
+            await _cartSv.RemoveAll(userId, id);
+            return Ok();
+        }
+
+        [Authorize]
+        public async Task<ActionResult> Clear()
+        {
+            var userId = GetUserId();
+            await _cartSv.Clear(userId);
             return Ok();
         }
 

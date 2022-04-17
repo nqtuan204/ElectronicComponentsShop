@@ -14,6 +14,8 @@ namespace ElectronicComponentsShop.DTOs
         public string ProductThumbnailURL { get; set; }
         public decimal? Price { get; set; }
         public int Quantity { get; set; }
+
+        public CartItemDTO() { }
         public CartItemDTO(CartItem item)
         {
             ProductId = item.ProductId;

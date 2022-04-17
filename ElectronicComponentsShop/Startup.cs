@@ -106,7 +106,10 @@ namespace ElectronicComponentsShop
                 var response = context.HttpContext.Response;
 
                 if (response.StatusCode == 401)
+                {
+                    response.Cookies.Delete("token");
                     response.Redirect("/User/Login");
+                }    
             });
 
             app.UseAuthorization();
