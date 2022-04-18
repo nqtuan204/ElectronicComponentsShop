@@ -2,27 +2,81 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
+    string[] values = new string[] { null, "views_desc", "date_desc", "date_asc", "name_asc", "name_desc", "score_desc", "price_desc", "price_asc" };
+    string[] displays = new string[] { "Mặc định", "Xem nhiều", "Mới", "Cũ", "A->Z", "Z->A", "Đánh giá", "Giá cao", "Giá thấp" };
+    int[] pageSizes = { 9, 15, 18, 24 };
+    string categoryIds = String.IsNullOrEmpty(Model.Filter.Categories) ? "" : Model.Filter.Categories;
 }
 
+@model ProductListVM
+<!-- ASIDE -->
+<div id="aside" class="col-md-3">
+    <!-- aside Widget -->
+    <div class="aside">
+        <h3 class="aside-title">Danh mục</h3>
+        @foreach (var Category in Model.Categories)
+        {
+            <div class="checkbox-filter">
+                <div class="input-checkbox">
+                    <input type="checkbox" id="category-@Category.Id" name="categories" checked="@(categoryIds.Contains(Category.Id.ToString()))" value="@Category.Id">
+                    <label for="category-@Category.Id">
+                        <span></span>
+                        @Category.Name
+                        <small>(@Category.NumberOfProducts)</small>
+                    </label>
+                </div>
+            </div>
+        }
+    </div>
+    <!-- /aside Widget -->
+    <!-- aside Widget -->
+    <div class="aside">
+        <h3 class="aside-title">Khoảng giá</h3>
+        <div class="price-filter">
+            <div class="input-number price-min">
+                <input id="price-min" type="number" name="minPrice">
+                <span class="qty-up">+</span>
+                <span class="qty-down">-</span>
+            </div>
+            <span>-</span>
+            <div class="input-number price-max">
+                <input id="price-max" type="number" name="maxPrice">
+                <span class="qty-up">+</span>
+                <span class="qty-down">-</span>
+            </div>
+        </div>
+    </div>
+    <div class="header-search">
+        <form>
+            <button type="button" onclick="apply()" class="search-btn">Áp dụng</button>
+        </form>
+    </div>
+    <!-- /aside Widget -->
+</div>
 
+<!-- /ASIDE -->
 <!-- STORE -->
 <div id="store" class="col-md-9">
     <!-- store top filter -->
     <div class="store-filter clearfix">
         <div class="store-sort">
             <label>
-                Sort By:
-                <select class="input-select">
-                    <option value="0">Popular</option>
-                    <option value="1">Position</option>
+                Sắp xếp:
+                <select class="input-select" id="sort-selection">
+                    @for (int i = 0; i < values.Length; i++)
+                    {
+                        <option value="@values[i]" selected="@(values[i]==Model.SortBy)">@displays[i]</option>
+                    }
                 </select>
             </label>
 
             <label>
-                Show:
-                <select class="input-select">
-                    <option value="0">20</option>
-                    <option value="1">50</option>
+                Hiển thị:
+                <select class="input-select" id="pageSize-selection">
+                    @foreach (var size in pageSizes)
+                    {
+                        <option value="@size" selected="@(size==Model.Paginator.PageSize)">@size</option>
+                    }
                 </select>
             </label>
         </div>
@@ -32,22 +86,25 @@
         </ul>
     </div>
     <!-- /store top filter -->
-    <!-- store products -->
-    <div class="row">
-        <!-- render products here-->
-    </div>
-    <!-- /store products -->
-    <!-- store bottom filter -->
-    <div class="store-filter clearfix">
-        <span class="store-qty">Showing 20-100 products</span>
-        <ul class="store-pagination">
-            <li class="active">1</li>
-            <li><a href="#">2</a></li>
-            <li><a href="#">3</a></li>
-            <li><a href="#">4</a></li>
-            <li><a href="#"><i class="fa fa-angle-right"></i></a></li>
-        </ul>
-    </div>
-    <!-- /store bottom filter -->
+    @if (Model.Products.Count() == 0)
+    {
+        <h4>Không có sản phẩm phù hợp, kiểm tra lại bộ lọc.</h4>
+    }
+    else
+    {
+        <!-- store products -->
+        <div class="row">
+            <!-- render products here-->
+            @foreach (var product in Model.Products)
+            {
+                Html.RenderPartialAsync("_Product", product);
+            }
+        </div>
+        <!-- /store products -->
+        @if (Model.Paginator.LastPage > 1)
+        {
+            <partial name="_Paginator" model="@Model.Paginator" />
+        }
+    }
 </div>
 <!-- /STORE -->

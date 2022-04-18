@@ -1,0 +1,63 @@
+﻿@model PaginatorVM
+@{ 
+    string prefix = Model.Path.Contains('?') ? "&" : "?";
+}
+<!-- store bottom filter -->
+<div class="store-filter clearfix">
+    <span class="store-qty">Hiển thị từ @Model.From đến @Model.To trên @Model.Total SP</span>
+    <ul class="store-pagination">
+        @if (Model.Page > 1)
+        {
+            if (Model.Page == 2)
+            {
+                <li><a href="@Model.Path"><i class="fa fa-angle-left"></i></a></li>
+            }
+            else
+            {
+                <li><a href="@($"{Model.Path}{prefix}page={Model.Page-1}")"><i class="fa fa-angle-left"></i></a></li>
+            }
+            <li><a href="@Model.Path">1</a></li>
+        }
+
+        @if (Model.Page - Model.Displays > 2)
+        {
+            <li>...</li>
+            for (int p = Model.Page - Model.Displays; p <= Model.Page - 1; p++)
+            {
+                <li><a href="@($"{Model.Path}{prefix}page={p}")">@p</a></li>
+            }
+        }
+        else
+        {
+            for (int p = 2; p <= Model.Page - 1; p++)
+            {
+                <li><a href="@($"{Model.Path}{prefix}page={p}")">@p</a></li>
+            }
+        }
+
+        <li class="active">@Model.Page</li>
+
+        @if (Model.Page + Model.Displays < Model.LastPage - 1)
+        {
+            for (int p = Model.Page + 1; p <= Model.Page + Model.Displays; p++)
+            {
+                <li><a href="@($"{Model.Path}{prefix}page={p}")">@p</a></li>
+            }
+            <li>...</li>
+        }
+        else
+        {
+            for (int p = Model.Page + 1; p <= Model.LastPage - 1; p++)
+            {
+                <li><a href="@($"{Model.Path}{prefix}page={p}")">@p</a></li>
+            }
+        }
+
+        @if (Model.Page < Model.LastPage)
+        {
+            <li><a href="@($"{Model.Path}{prefix}page={Model.LastPage}")">@Model.LastPage</a></li>
+            <li><a href="@($"{Model.Path}{prefix}page={Model.Page+1}")"><i class="fa fa-angle-right"></i></a></li>
+        }
+    </ul>
+</div>
+<!-- /store bottom filter -->

@@ -4,46 +4,48 @@
 @{
 }
 @model ProductVM
-    <!-- product -->
-<div class="product">
-    <div class="product-img">
-        <img src="@Model.ThumbnailURL" alt="@Model.Name">
-        <div class="product-label">
-            @if (Model.IsNew)
-            {
-                <span class="new">NEW</span>
-            }
+<!-- product -->
+<div class="col-md-4 col-xs-6">
+    <div class="product">
+        <div class="product-img">
+            <img src="@Model.ThumbnailURL" alt="@Model.Name">
+            <div class="product-label">
+                @if (Model.IsNew)
+                {
+                    <span class="new">NEW</span>
+                }
+            </div>
         </div>
-    </div>
-    <div class="product-body">
-        <h3 class="product-name"><a href="@Model.URL" title="@Model.Name">@Model.ShortName</a></h3>
-        <h4 class="product-price">@Model.FormattedPrice </h4>
-        <div class="product-rating">
-            @if (Model.AverageScore >= 0)
-            {
-                <i class="fa fa-star"></i>
-            }
-            @if (Model.AverageScore > 1)
-            {
-                <i class="fa fa-star"></i>
-            }@if (Model.AverageScore > 2)
-            {
-                <i class="fa fa-star"></i>
-            }@if (Model.AverageScore > 3)
-            {
-                <i class="fa fa-star"></i>
-            }@if (Model.AverageScore > 4)
-            {
-                <i class="fa fa-star"></i>
-            }
+        <div class="product-body">
+            <h3 class="product-name"><a href="@Model.URL" title="@Model.Name">@Model.ShortName</a></h3>
+            <h4 class="product-price">@Model.FormattedPrice </h4>
+            <div class="product-rating">
+                @if (Model.AverageScore >= 0)
+                {
+                    <i class="fa fa-star"></i>
+                }
+                @if (Model.AverageScore > 1)
+                {
+                    <i class="fa fa-star"></i>
+                }@if (Model.AverageScore > 2)
+                {
+                    <i class="fa fa-star"></i>
+                }@if (Model.AverageScore > 3)
+                {
+                    <i class="fa fa-star"></i>
+                }@if (Model.AverageScore > 4)
+                {
+                    <i class="fa fa-star"></i>
+                }
+            </div>
+            <div class="product-btns">
+                <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">Thêm vào danh sách yêu thích</span></button>
+                <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
+            </div>
         </div>
-        <div class="product-btns">
-            <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">Thêm vào danh sách yêu thích</span></button>
-            <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
+        <div class="add-to-cart">
+            <button class="add-to-cart-btn" onclick="addToCart(@Model.Id)"><i class="fa fa-shopping-cart"></i> Thêm vào giỏ hàng</button>
         </div>
-    </div>
-    <div class="add-to-cart">
-        <button class="add-to-cart-btn" onclick="addToCart(@Model.Id)"><i class="fa fa-shopping-cart"></i> Thêm vào giỏ hàng</button>
     </div>
 </div>
 <!-- /product -->

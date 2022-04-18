@@ -31,6 +31,8 @@ namespace ElectronicComponentsShop.Services.Product
         }
         private Expression<Func<Entities.Product, dynamic>> SortExpression(string sortBy)
         {
+            if (String.IsNullOrEmpty(sortBy))
+                return null;
             if (sortBy.StartsWith("date"))
                 return p => p.CreatedAt;
             if (sortBy.StartsWith("views"))
@@ -38,7 +40,9 @@ namespace ElectronicComponentsShop.Services.Product
             if (sortBy.StartsWith("name"))
                 return p => p.Name;
             if (sortBy.StartsWith("score"))
-                return p => GetAverageScore(p.Id);
+                return p => p.Reviews.Average(r=>r.Score);
+            if (sortBy.StartsWith("price"))
+                return p => p.Price;
             return null;
         }
 
@@ -48,14 +52,16 @@ namespace ElectronicComponentsShop.Services.Product
             if (filter == null)
                 return expressions;
             if (filter.CategoryIds != null && filter.CategoryIds.Count > 0)
-                foreach (var id in filter.CategoryIds)
-                    expressions.Add(p => p.CategoryId == id);
+                expressions.Add(p => filter.CategoryIds.Contains(p.CategoryId));
             if (filter.MinPrice != null)
                 expressions.Add(p => p.Price >= filter.MinPrice);
             if (filter.MaxPrice != null)
                 expressions.Add(p => p.Price <= filter.MaxPrice);
             if (!String.IsNullOrEmpty(filter.Keyword))
-                expressions.Add(p => p.Name.StartsWith(filter.Keyword));
+            {
+                filter.Keyword=filter.Keyword.ToLower();
+                expressions.Add(p => p.Name.ToLower().StartsWith(filter.Keyword));
+            }
             return expressions;
         }
         public IEnumerable<ProductDTO> GetProducts(int take = 0, int skip = 0, string sortBy = null, ProductFilterDTO filter = null)
@@ -81,6 +87,17 @@ namespace ElectronicComponentsShop.Services.Product
             if (take > 0)
                 products = products.Take(take);
             return products.Include(p => p.Reviews).Select(p => new ProductDTO(p, p.Reviews.Count() > 0 ? p.Reviews.Average(p => p.Score) : 0)).ToList();
+        }
+
+        public int Count(ProductFilterDTO filter)
+        {
+            if (filter == null)
+                return _db.Products.Count();
+            var products = from p in _db.Products select p;
+            var filterExpressions = FilterExpressions(filter);
+            foreach (var expression in filterExpressions)
+                products = products.Where(expression);
+            return products.Count();
         }
     }
 }
