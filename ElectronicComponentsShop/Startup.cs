@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using ElectronicComponentsShop.Services.Jwt;
 using ElectronicComponentsShop.Services.Cart;
+using ElectronicComponentsShop.Services.Order;
 
 namespace ElectronicComponentsShop
 {
@@ -51,6 +52,7 @@ namespace ElectronicComponentsShop
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IJwtService, JwtService>();
             services.AddTransient<ICartService, CartService>();
+            services.AddTransient<IOrderService, OrderService>();
             services.AddAuthentication("Bearer").AddJwtBearer("Bearer", options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters()
@@ -109,13 +111,17 @@ namespace ElectronicComponentsShop
                 {
                     response.Cookies.Delete("token");
                     response.Redirect("/User/Login");
-                }    
+                }
             });
 
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute(
+                    name: "checkout",
+                    pattern: "/Checkout",
+                    defaults: new { controller = "Order", action = "Checkout" });
                 endpoints.MapControllerRoute(
                     name: "product list",
                     pattern: "/product/list",

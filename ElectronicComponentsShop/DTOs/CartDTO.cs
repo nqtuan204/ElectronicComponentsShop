@@ -7,12 +7,12 @@ namespace ElectronicComponentsShop.DTOs
 {
     public class CartDTO
     {
-        public IEnumerable<CartItemDTO> Items { get; set; }
+        public IEnumerable<ItemDTO> Items { get; set; }
         public CartDTO()
         {
 
         }
-        public CartDTO(IEnumerable<CartItemDTO> items)
+        public CartDTO(IEnumerable<ItemDTO> items)
         {
             Items = items;
         }

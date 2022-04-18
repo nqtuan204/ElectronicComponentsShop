@@ -9,6 +9,7 @@ using ElectronicComponentsShop.DTOs;
 using ElectronicComponentsShop.Database;
 using ElectronicComponentsShop.Services.User;
 using ElectronicComponentsShop.Services.Jwt;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ElectronicComponentsShop.Controllers
 {
@@ -79,7 +80,43 @@ namespace ElectronicComponentsShop.Controllers
             HttpContext.Response.Cookies.Delete("token");
             return RedirectToAction("Login");
         }
-        // GET: UserController/Details/5
+
+        private int GetUserId()
+        {
+            return int.Parse(_jwt.GetUserClaims(HttpContext.Request.Cookies["token"]).First(c => c.Type == "Id").Value);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> AddToFavourites(int id)
+        {
+            Console.WriteLine(id);
+            int userId = GetUserId();
+            if (!_userSv.GetFavProductIds(userId).Contains(id))
+                await _userSv.AddToFavourites(userId, id);
+            else
+                await _userSv.RemoveFromFavourites(userId, id);
+
+            return Ok(id);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> RemoveFromFavourites(int id)
+        {
+            int userId = GetUserId();
+            if (_userSv.GetFavProductIds(userId).Contains(id))
+                await _userSv.RemoveFromFavourites(userId, id);
+            else
+                await _userSv.AddToFavourites(userId, id);
+            return Ok(id);
+        }
+
+        [Authorize]
+        public ActionResult GetFavouriteProductIds()
+        {
+            int userId = GetUserId();
+            return Json(_userSv.GetFavProductIds(userId));
+        }
+
         public ActionResult Details(int id)
         {
             return View();

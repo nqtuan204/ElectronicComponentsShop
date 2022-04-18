@@ -2,8 +2,10 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
+    
 }
 @model ProductVM
+
 <!-- product -->
 <div class="col-md-4 col-xs-6">
     <div class="product">
@@ -39,7 +41,7 @@
                 }
             </div>
             <div class="product-btns">
-                <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">Thêm vào danh sách yêu thích</span></button>
+                <button class="add-to-wishlist" onclick="addToFavList('@Model.Id')"><i class="fa fa-heart-o"></i><span class="tooltipp">Thêm vào danh sách yêu thích</span></button>
                 <button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
             </div>
         </div>

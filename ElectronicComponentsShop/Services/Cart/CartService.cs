@@ -16,9 +16,9 @@ namespace ElectronicComponentsShop.Services.Cart
         {
             _db = db;
         }
-        public async Task<IEnumerable<CartItemDTO>> GetItems(int userId)
+        public async Task<IEnumerable<ItemDTO>> GetItems(int userId)
         {
-            var items = await _db.CartItems.Include(item => item.Product).Where(item => item.UserId == userId).Select(item => new CartItemDTO(item)).ToListAsync();
+            var items = await _db.CartItems.Include(item => item.Product).Where(item => item.UserId == userId).Select(item => new ItemDTO(item)).ToListAsync();
             return items;
         }
 
@@ -59,12 +59,11 @@ namespace ElectronicComponentsShop.Services.Cart
 
         public async Task Clear(int userId)
         {
-            var items = await _db.CartItems.Where(item => item.UserId == userId).ToListAsync();
-            _db.CartItems.RemoveRange(items);
+            _db.CartItems.RemoveRange(_db.CartItems.Where(item => item.UserId == userId));
             await _db.SaveChangesAsync();
         }
 
-        public async Task Update(int userId, IEnumerable<CartItemDTO> items)
+        public async Task Update(int userId, IEnumerable<ItemDTO> items)
         {
             var productIds = items.Select(item => item.ProductId).ToList();
             var removedItems = _db.CartItems.Where(item => item.UserId == userId && !productIds.Contains(item.ProductId));

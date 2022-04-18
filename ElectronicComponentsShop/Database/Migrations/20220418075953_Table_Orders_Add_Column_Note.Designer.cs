@@ -3,15 +3,17 @@ using System;
 using ElectronicComponentsShop.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace ElectronicComponentsShop.Database.Migrations
 {
     [DbContext(typeof(ECSDbContext))]
-    partial class ECSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220418075953_Table_Orders_Add_Column_Note")]
+    partial class Table_Orders_Add_Column_Note
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -111,9 +113,6 @@ namespace ElectronicComponentsShop.Database.Migrations
                     b.Property<int>("OrderStateId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("PaymentTypeId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Province")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -130,8 +129,6 @@ namespace ElectronicComponentsShop.Database.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("OrderStateId");
-
-                    b.HasIndex("PaymentTypeId");
 
                     b.HasIndex("UserId");
 
@@ -448,12 +445,6 @@ namespace ElectronicComponentsShop.Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ElectronicComponentsShop.Entities.PaymentType", "PaymentType")
-                        .WithMany("Orders")
-                        .HasForeignKey("PaymentTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("ElectronicComponentsShop.Entities.User", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
@@ -461,8 +452,6 @@ namespace ElectronicComponentsShop.Database.Migrations
                         .IsRequired();
 
                     b.Navigation("OrderState");
-
-                    b.Navigation("PaymentType");
 
                     b.Navigation("User");
                 });
@@ -584,8 +573,6 @@ namespace ElectronicComponentsShop.Database.Migrations
 
             modelBuilder.Entity("ElectronicComponentsShop.Entities.PaymentType", b =>
                 {
-                    b.Navigation("Orders");
-
                     b.Navigation("Payments");
                 });
 

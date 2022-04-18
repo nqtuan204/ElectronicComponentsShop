@@ -65,6 +65,8 @@ namespace ElectronicComponentsShop.Database
                 action.Property(order => order.Province).HasMaxLength(50).IsRequired();
                 action.Property(order => order.District).HasMaxLength(50).IsRequired();
                 action.Property(order => order.Ward).HasMaxLength(50).IsRequired();
+                action.Property(order => order.Note).HasMaxLength(500);
+                action.HasOne(order => order.PaymentType).WithMany(paymentType => paymentType.Orders).HasForeignKey(order => order.PaymentTypeId);
             });
 
             builder.Entity<OrderItem>(action =>

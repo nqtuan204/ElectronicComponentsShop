@@ -49,5 +49,40 @@ namespace ElectronicComponentsShop.Services.User
             IEnumerable<string> roles = _db.UserRoles.Include(ur => ur.Role).Where(ur => ur.UserId == user.Id).Select(ur => ur.Role.Name);
             return new UserDTO(user, roles);
         }
+        public UserDTO GetUser(int id)
+        {
+            var user = _db.Users.FirstOrDefault(user => user.Id == id);
+            if (user != null)
+            {
+                var roles = _db.UserRoles.Include(ur => ur.Role).Where(ur => ur.UserId == user.Id).Select(ur => ur.Role.Name);
+                return new UserDTO(user, roles);
+            }
+            return null;
+        }
+
+        public async Task AddToFavourites(int userId, int productId)
+        {
+            await _db.Favourites.AddAsync(new Favourite(userId, productId));
+            await _db.SaveChangesAsync();
+        }
+
+        public async Task RemoveFromFavourites(int userId, int productId)
+        {
+            var fav = _db.Favourites.FirstOrDefault(f => f.UserId == userId && f.ProductId == productId);
+            if (fav != null)
+            {
+                _db.Favourites.Remove(fav);
+                await _db.SaveChangesAsync();
+            }
+        }
+        public int GetNumOfFavourites(int userId)
+        {
+            return _db.Favourites.Count(f => f.UserId == userId);
+        }
+
+        public IEnumerable<int> GetFavProductIds(int userId)
+        {
+            return _db.Favourites.Where(f => f.UserId == userId).Select(f => f.ProductId);
+        }
     }
 }

@@ -11,5 +11,11 @@ namespace ElectronicComponentsShop.Entities
         public User User { get; set; }
         public int ProductId { get; set; }
         public Product Product { get; set; }
+
+        public Favourite(int userId, int productId)
+        {
+            UserId = userId;
+            ProductId = productId;
+        }
     }
 }

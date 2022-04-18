@@ -1,0 +1,153 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model CheckoutVM
+
+<form asp-action="Checkout" asp-controller="Order" method="post">
+    <!-- SECTION -->
+    <div class="section">
+        <!-- container -->
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+
+                <div class="col-md-7">
+                    <!-- Billing Details -->
+                    <div class="billing-details">
+                        <div class="section-title">
+                            <h3 class="title">Thông tin nhận hàng</h3>
+                        </div>
+                        <div class="form-group">
+                            <input class="input" type="text" asp-for="FullName" placeholder="Họ tên" value="@Model.FullName">
+                        </div>
+                        <div class="form-group">
+                            <input class="input" type="tel" asp-for="PhoneNumber" placeholder="Số điện thoại" value="@Model.PhoneNumber">
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input class="input" type="email" asp-for="Email" placeholder="Email" value="@Model.Email">
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input class="input" type="text" asp-for="Address" placeholder="Địa chỉ nhận hàng" value="@Model.Address">
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" asp-for="Province" onchange="selectDistricts()" class="custom-select" value="@Model.Province">@Model.Province</select>
+                            <span asp-validation-for="Province" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" asp-for="District" onchange="selectWards()" value="@Model.District">@Model.District</select>
+                            <span asp-validation-for="District" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" asp-for="Ward" value="@Model.Ward">@Model.Ward</select>
+                            <span asp-validation-for="Ward" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <!-- /Billing Details -->
+                    <!-- Order notes -->
+                    <div class="order-notes">
+                        <textarea class="input" asp-for="Note" placeholder="Ghi chú"></textarea>
+                        <span asp-validation-for="Note" class="text-danger"></span>
+                    </div>
+                    <!-- /Order notes -->
+                </div>
+
+                <!-- Order Details -->
+                <div class="col-md-5 order-details">
+                    <div class="section-title text-center">
+                        <h3 class="title">Đơn hàng</h3>
+                    </div>
+                    <div class="order-summary">
+                        <div class="order-col">
+                            <div><strong>Sản phẩm</strong></div>
+                            <div><strong>Tổng cộng</strong></div>
+                        </div>
+                        <div class="order-products">
+                            @{
+                                int i = -1;
+                                @foreach (var item in Model.Items)
+                                {
+                                    i++;
+                                    <div class="order-col">
+                                        <div>@(item.Quantity)x @(item.ProductName)</div>
+                                        <div>@(item.TotalPrice)</div>
+                                    </div>
+                                    <input name="Items[@i].ProductId" type="number" value="@item.ProductId" hidden />
+                                    <input name="Items[@i].Quantity" type="number" value="@item.Quantity" hidden />
+                                    <input name="Items[@i].TotalPrice" type="text" value="@item.TotalPrice" hidden />
+                                    <input name="Items[@i].Price" type="text" value="@item.Price" hidden />
+                                    <input name="Items[@i].ProductName" type="text" value="@item.ProductName" hidden />
+                                    <input name="Items[@i].ProductThumbnailURL" type="text" value="@item.ProductThumbnailURL" hidden />
+                                }
+                            }
+                        </div>
+                        <div class="order-col">
+                            <div>Phí vận chuyển</div>
+                            <div><strong>0đ</strong></div>
+                        </div>
+                        <div class="order-col">
+                            <div><strong>Tổng cộng</strong></div>
+                            <div><strong class="order-total">@Model.Amount</strong></div>
+                        </div>
+                    </div>
+                    <div class="payment-method">
+                        @foreach (var key in Model.PaymentTypes.Keys)
+                        {
+                            <div class="input-radio">
+                                <input type="radio" asp-for="payment" id="payment-@key" value="@key">
+                                <label for="payment-@key">
+                                    <span></span>
+                                    COD
+                                </label>
+                                <div class="caption">
+                                    <p>Thanh toán khi nhận hàng.</p>
+                                </div>
+                            </div>
+                            <span asp-validation-for="payment" class="text-danger"></span>
+                        }
+                    </div>
+                    <div class="input-checkbox">
+                        <button type="submit" class="primary-btn order-submit" style="width:100%">Xác nhận đặt hàng</button>
+                    </div>
+                    <!-- /Order Details -->
+                </div>
+                <!-- /row -->
+            </div>
+            <!-- /container -->
+        </div>
+    </div>
+        <!-- /SECTION -->
+</form>
+
+
+<script>
+    var locals = [];
+    fetch('/local.json').then(re => re.json()).then(data => {
+        locals = data;
+        document.getElementById('Province').innerHTML = '<option value="" disabled selected>Tỉnh/thành phố</option>';
+        for (let province of locals) {
+            document.getElementById('Province').innerHTML += `<option value="${province.name}">${province.name}</option>`
+        }
+        selectDistricts();
+    });
+
+    function selectDistricts() {
+        document.getElementById('District').innerHTML = '<option value="" disabled selected>Quận/huyện</option>';;
+        document.getElementById('Ward').innerHTML = '<option value="" disabled selected>Phường/xã</option>';;
+        var province = locals.filter(p => p.name == document.getElementById('Province').value)[0];
+        for (let district of province.districts)
+            document.getElementById('District').innerHTML += `<option value="${district.name}">${district.name}</option>`;
+    }
+
+    function selectWards() {
+        document.getElementById('Ward').innerHTML = '<option value="" disabled selected>Phường/xã</option>';
+        var province = locals.filter(p => p.name == document.getElementById('Province').value)[0];
+        let district = province.districts.filter(d => d.name == document.getElementById('District').value)[0];
+        for (let ward of district.wards)
+            document.getElementById('Ward').innerHTML += `<option value="${ward.name}">${ward.name}</option>`;
+    }
+</script>

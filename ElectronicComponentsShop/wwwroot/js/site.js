@@ -17,28 +17,48 @@ function formattedPrice(price) {
 }
 
 var items = [];
+var favProductIds = [];
 
-function getItems(){
+function getItems() {
     if (document.cookie.includes('token')) {
-
-
         fetch(`/Cart/GetItems`).then(re => re.json()).then(data => {
             items = data;
             renderCart(items);
         });
+        getFavList();
     }
 };
 
+function getFavList() {
+    fetch(`/User/GetFavouriteProductIds`).then(re => re.json()).then(data => { favProductIds = data; setFavList(); });
+}
+
+function setFavList() {
+    document.getElementById('wish-list').innerHTML = favProductIds.length;
+}
+
+function addToFavList(productId) {
+    if (!favProductIds.includes(productId)) {
+        favProductIds.push(productId);
+        fetch(`/User/AddToFavourites/${productId}`).then(re => re.json()).then(data => setFavList()).catch(re => window.location.href = '/User/Login');
+    }
+    else {
+        favProductIds = favProductIds.filter(i => i != productId);
+        fetch(`/User/RemoveFromFavourites/${productId}`).then(re => re.json()).then(data => setFavList()).catch(re => window.location.href = '/User/Login');
+    }
+    setFavList();
+}
 
 var renderCart = (items) => {
-    let total = 0;
-    total = items.map(item => parseInt(item.quantity)).reduce((sum = 0, quantity) => sum + quantity);
-    document.getElementById('cart-item-quantity').innerHTML = total;
-    document.getElementById('cart-buttons').style.display = 'block';
-    var cartItems = document.getElementById('cart-item-list');
-    cartItems.innerHTML = '';
-    for (let item of items) {
-        cartItems.innerHTML += `<div class="product-widget" id="cart-item-${item.productId}">
+    if (items.length > 0) {
+        let total = 0;
+        total = items.map(item => parseInt(item.quantity)).reduce((sum = 0, quantity) => sum + quantity);
+        document.getElementById('cart-item-quantity').innerHTML = total;
+        document.getElementById('cart-buttons').style.display = 'block';
+        var cartItems = document.getElementById('cart-item-list');
+        cartItems.innerHTML = '';
+        for (let item of items) {
+            cartItems.innerHTML += `<div class="product-widget" id="cart-item-${item.productId}">
     <div class="product-img">
         <img src="${item.productThumbnailURL}" alt="" />
     </div>
@@ -48,13 +68,14 @@ var renderCart = (items) => {
     </div>
     <button class="delete" onclick="removeItem(${item.productId})"><i class="fa fa-close"></i></button>
 </div>`
-    }
+        }
 
-    let cartTotal = document.getElementById('cart-total');
-    cartTotal.innerHTML = `<small>Số sản phẩm: ${totalQuantity(items)}</small>
+        let cartTotal = document.getElementById('cart-total');
+        cartTotal.innerHTML = `<small>Số sản phẩm: ${totalQuantity(items)}</small>
                                     <h5>SUBTOTAL: ${amount(items)}</h5>`
-    if (window.location.href.includes('Cart') || window.location.href.includes('cart'))
-        renderCartTable();
+        if (window.location.href.includes('Cart') || window.location.href.includes('cart'))
+            renderCartTable();
+    }
 }
 
 function totalQuantity(items) {

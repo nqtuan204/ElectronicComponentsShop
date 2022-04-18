@@ -11,5 +11,6 @@ namespace ElectronicComponentsShop.Entities
         public string Name { get; set; }
         public string CreatedAt { get; set; }
         public IEnumerable<Payment> Payments { get; set; }
+        public IEnumerable<Order> Orders { get; set; }
     }
 }

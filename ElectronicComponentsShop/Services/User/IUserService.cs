@@ -14,5 +14,10 @@ namespace ElectronicComponentsShop.Services.User
         Task AddRoles(int userId, IEnumerable<int> roles);
         Task AddRole(int userId, int roleId);
         UserDTO GetUser(string PhoneNumberOrEmail, string Password);
+        UserDTO GetUser(int id);
+        Task AddToFavourites(int userId, int productId);
+        int GetNumOfFavourites(int userId);
+        IEnumerable<int> GetFavProductIds(int userID);
+        Task RemoveFromFavourites(int userId, int productId);
     }
 }

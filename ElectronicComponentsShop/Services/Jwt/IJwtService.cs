@@ -11,5 +11,6 @@ namespace ElectronicComponentsShop.Services.Jwt
     {
         string GetToken(UserDTO user);
         string GetRefreshToken();
+        IEnumerable<Claim> GetUserClaims(string tokenString);
     }
 }

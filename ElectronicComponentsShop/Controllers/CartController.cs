@@ -6,17 +6,22 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using ElectronicComponentsShop.Services.Cart;
+using ElectronicComponentsShop.Services.User;
 using ElectronicComponentsShop.DTOs;
-using System.IdentityModel.Tokens.Jwt;
+using ElectronicComponentsShop.Services.Jwt;
 
 namespace ElectronicComponentsShop.Controllers
 {
     public class CartController : Controller
     {
         private readonly ICartService _cartSv;
-        public CartController(ICartService cartSv)
+        private readonly IUserService _userSv;
+        private readonly IJwtService _jwtSv;
+        public CartController(ICartService cartSv, IUserService userSv, IJwtService jwtSv)
         {
             _cartSv = cartSv;
+            _userSv = userSv;
+            _jwtSv = jwtSv;
         }
         // GET: CartController
         [Authorize]
@@ -27,7 +32,7 @@ namespace ElectronicComponentsShop.Controllers
 
         // GET: CartController/Details/5
         [Authorize]
-        public async Task<IEnumerable<CartItemDTO>> GetItems()
+        public async Task<IEnumerable<ItemDTO>> GetItems()
         {
             var userId = GetUserId();
             var items = await _cartSv.GetItems(userId);
@@ -36,13 +41,13 @@ namespace ElectronicComponentsShop.Controllers
 
         private int GetUserId()
         {
-            var token = new JwtSecurityTokenHandler().ReadJwtToken(HttpContext.Request.Cookies["token"]);
-            int userId = int.Parse(token.Claims.First(c => c.Type == "Id").Value);
+            var claims = _jwtSv.GetUserClaims(Request.Cookies["token"]);
+            int userId = int.Parse(claims.First(c => c.Type == "Id").Value);
             return userId;
         }
 
         [Authorize]
-        public async Task<IEnumerable<CartItemDTO>> AddItem(int id)
+        public async Task<IEnumerable<ItemDTO>> AddItem(int id)
         {
             var userId = GetUserId();
             await _cartSv.AddItem(userId, id);
@@ -50,7 +55,7 @@ namespace ElectronicComponentsShop.Controllers
             return items;
         }
 
-        
+
         [Authorize]
         [HttpPost]
         public async Task<ActionResult> Update([FromBody] CartDTO cart)
@@ -74,12 +79,6 @@ namespace ElectronicComponentsShop.Controllers
             var userId = GetUserId();
             await _cartSv.Clear(userId);
             return Ok();
-        }
-
-        // GET: CartController/Create
-        public ActionResult Create()
-        {
-            return View();
         }
 
         // POST: CartController/Create

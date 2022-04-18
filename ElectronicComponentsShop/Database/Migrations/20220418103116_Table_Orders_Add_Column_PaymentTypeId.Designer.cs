@@ -3,15 +3,17 @@ using System;
 using ElectronicComponentsShop.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace ElectronicComponentsShop.Database.Migrations
 {
     [DbContext(typeof(ECSDbContext))]
-    partial class ECSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220418103116_Table_Orders_Add_Column_PaymentTypeId")]
+    partial class Table_Orders_Add_Column_PaymentTypeId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

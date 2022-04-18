@@ -6,7 +6,7 @@ using ElectronicComponentsShop.Entities;
 
 namespace ElectronicComponentsShop.DTOs
 {
-    public class CartItemDTO
+    public class ItemDTO
     {
         public int ProductId { get; set; }
         public string ProductName { get; set; }
@@ -15,8 +15,18 @@ namespace ElectronicComponentsShop.DTOs
         public decimal? Price { get; set; }
         public int Quantity { get; set; }
 
-        public CartItemDTO() { }
-        public CartItemDTO(CartItem item)
+        public ItemDTO() { }
+        public ItemDTO(CartItem item)
+        {
+            ProductId = item.ProductId;
+            ProductName = item.Product.Name;
+            ProductURL = $"/product/{item.Product.Id}.{item.Product.Slug}";
+            ProductThumbnailURL = item.Product.ThumbnailURL;
+            Price = item.Product.Price;
+            Quantity = item.Quantity;
+        }
+
+        public ItemDTO(OrderItem item)
         {
             ProductId = item.ProductId;
             ProductName = item.Product.Name;

@@ -12,5 +12,12 @@ namespace ElectronicComponentsShop.Entities
         public int ProductId { get; set; }
         public Product Product { get; set; }
         public int Quantity { get; set; }
+
+        public OrderItem(int orderId,int productId, int quantity)
+        {
+            OrderId = orderId;
+            ProductId = productId;
+            Quantity = quantity;
+        }
     }
 }

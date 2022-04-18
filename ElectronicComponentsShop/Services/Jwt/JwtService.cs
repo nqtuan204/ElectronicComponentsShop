@@ -57,5 +57,11 @@ namespace ElectronicComponentsShop.Services.Jwt
                 claims.Add(new Claim("Role", value));
             return claims;
         }
+
+        public IEnumerable<Claim> GetUserClaims(string tokenString)
+        {
+            var token = new JwtSecurityTokenHandler().ReadJwtToken(tokenString);
+            return token.Claims;
+        }
     }
 }
