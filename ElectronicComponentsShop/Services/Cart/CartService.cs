@@ -22,17 +22,21 @@ namespace ElectronicComponentsShop.Services.Cart
             return items;
         }
 
-        public async Task AddItem(int userId, int productId)
+        public async Task AddItem(int userId, int productId, int quantity)
         {
+            Console.WriteLine("Add Item CartService");
+            Console.WriteLine("userId "+userId);
+            Console.WriteLine("productId " +productId);
+            Console.WriteLine("quantity "+quantity);
             var item = _db.CartItems.FirstOrDefault(item => item.UserId == userId && item.ProductId == productId);
             if (item == null)
             {
-                _db.CartItems.Add(new CartItem(userId, productId, 1));
+                _db.CartItems.Add(new CartItem(userId, productId, quantity));
                 await _db.SaveChangesAsync();
             }
             else
             {
-                item.Quantity++;
+                item.Quantity+=quantity;
                 await _db.SaveChangesAsync();
             }
         }

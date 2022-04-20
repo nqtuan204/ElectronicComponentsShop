@@ -47,10 +47,12 @@ namespace ElectronicComponentsShop.Controllers
         }
 
         [Authorize]
-        public async Task<IEnumerable<ItemDTO>> AddItem(int id)
+        public async Task<IEnumerable<ItemDTO>> AddItem(int id,int quantity)
         {
+            Console.WriteLine(id);
+            Console.WriteLine(quantity);
             var userId = GetUserId();
-            await _cartSv.AddItem(userId, id);
+            await _cartSv.AddItem(userId, id, quantity);
             var items = await _cartSv.GetItems(userId);
             return items;
         }

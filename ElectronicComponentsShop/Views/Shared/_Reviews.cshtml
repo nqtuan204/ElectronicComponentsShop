@@ -1,0 +1,72 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model IEnumerable<ReviewVM>
+<!-- Reviews -->
+<div class="col-md-6">
+    <div id="reviews">
+        <ul class="reviews">
+            @foreach (var review in Model)
+            {
+                <li>
+                    <div class="review-heading">
+                        <h5 class="name">@review.UserName</h5>
+                        <p class="date">@review.CreatedAt</p>
+                        <div class="review-rating">
+                            @if (review.Score >= 1)
+                            {
+                                <i class="fa fa-star"></i>
+                            }
+                            else
+                            {
+                                <i class="fa fa-star-o empty"></i>
+                            }
+                            @if (review.Score >= 2)
+                            {
+                                <i class="fa fa-star"></i>
+                            }
+                            else
+                            {
+                                <i class="fa fa-star-o empty"></i>
+                            }
+                            @if (review.Score >= 3)
+                            {
+                                <i class="fa fa-star"></i>
+                            }
+                            else
+                            {
+                                <i class="fa fa-star-o empty"></i>
+                            }
+                            @if (review.Score >= 4)
+                            {
+                                <i class="fa fa-star"></i>
+                            }
+                            else
+                            {
+                                <i class="fa fa-star-o empty"></i>
+                            }
+                            @if (review.Score >= 5)
+                            {
+                                <i class="fa fa-star"></i>
+                            }
+                            else
+                            {
+                                <i class="fa fa-star-o empty"></i>
+                            }
+                        </div>
+                    </div>
+                    <div class="review-body">
+                        <p>@review.Content</p>
+                    </div>
+                </li>
+            }
+        </ul>
+        
+    </div>
+</div>
+<!-- /Reviews -->
+<script>
+    
+</script>

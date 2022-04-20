@@ -12,5 +12,12 @@ namespace ElectronicComponentsShop.Services.Product
         double GetAverageScore(int id);
         IEnumerable<ProductDTO> GetProducts(int take = 0, int skip = 0, string sortBy = null, ProductFilterDTO filter = null);
         int Count(ProductFilterDTO filter);
+        ProductDetailsDTO GetProductDetails(int id);
+        IEnumerable<string> GetImageURLs(int id);
+        Dictionary<int, int> GetScoreStats(int id);
+        IEnumerable<ReviewDTO> GetAllReviews(int id);
+        int GetNumOfReviews(int id);
+        IEnumerable<ReviewDTO> GetPagedReviews(int id, int page);
+        IEnumerable<ProductDTO> GetRelatedProducts(int id, int categoryId);
     }
 }

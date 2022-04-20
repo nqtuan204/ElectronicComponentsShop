@@ -41,10 +41,14 @@ namespace ElectronicComponentsShop.Controllers
         // GET: OrderController
         public async Task<ActionResult> Checkout()
         {
+            ViewBag.Title = "Thanh toán";
+            ViewBag.BCTree = new Dictionary<string, string> { { "Trang chủ", "/" }, { "Thanh toán", "/Checkout" } };
             int userId = GetUserId();
             var user = _userSv.GetUser(userId);
             var paymentTypes = _orderSv.GetAllPaymentTypes();
             var items = await _cartSv.GetItems(userId);
+            if (items.Count() == 0)
+                return Redirect("/Cart");
             decimal? amount = items.Sum(item => item.Quantity * item.Price);
             var vm = new CheckoutVM(user, items.Select(i => new ItemVM(i)), paymentTypes, amount);
             return View(vm);

@@ -39,6 +39,8 @@ namespace ElectronicComponentsShop.Controllers
         // GET: UserController
         public ActionResult Register()
         {
+            ViewBag.Title = "Đăng ký";
+            ViewBag.BCTree = new Dictionary<string, string> { { "Trang chủ", "/" }, { "Đăng ký", "/User/Register" } };
             if (HttpContext.Request.Cookies.Keys.Contains("token"))
                 return Redirect("/");
             return View();
@@ -57,6 +59,8 @@ namespace ElectronicComponentsShop.Controllers
 
         public IActionResult Login()
         {
+            ViewBag.Title = "Đăng nhập";
+            ViewBag.BCTree = new Dictionary<string, string> { { "Trang chủ", "/" }, { "Đăng nhập", "/User/Login" } };
             if (HttpContext.Request.Cookies.Keys.Contains("token"))
                 return Redirect("/");
             return View();

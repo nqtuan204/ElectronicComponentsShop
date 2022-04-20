@@ -23,6 +23,8 @@ namespace ElectronicComponentsShop.Controllers
         // GET: ProductController
         public ActionResult List(int page = 1, int pageSize = 9, string sortBy = null, ProductFilterVM filter = null)
         {
+            ViewBag.Title = "Danh sách sản phẩm";
+            ViewBag.BCTree = new Dictionary<string, string> { { "Trang chủ", "/" }, { "Danh sách sản phẩm", "/Product/List" } };
             if (!String.IsNullOrEmpty(filter.Keyword))
                 return RedirectToAction("Search");
             var filterDTO = new ProductFilterDTO(filter);
@@ -37,13 +39,15 @@ namespace ElectronicComponentsShop.Controllers
 
         public ActionResult Search(int page = 1, int pageSize = 9, string sortBy = null, ProductFilterVM filter = null)
         {
+            ViewBag.Title = "Tìm kiếm";
+            ViewBag.BCTree = new Dictionary<string, string> { { "Trang chủ", "/" }, { "Danh sách sản phẩm", "/Product/Search" } };
             if (String.IsNullOrEmpty(filter.Keyword))
                 return RedirectToAction("List");
             ViewBag.keyword = filter.Keyword;
             var filterDTO = new ProductFilterDTO(filter);
             var products = _productSv.GetProducts(pageSize, pageSize * (page - 1), sortBy, filterDTO).Select(p => new ProductVM(p));
             var total = _productSv.Count(filterDTO);
-            string Path = Url.Action("Search", "Product", new { keyword = filter.Keyword, categories = filter.Categories, sortBy = sortBy, minPrice = filter.MinPrice, maxPrice = filter.MaxPrice});
+            string Path = Url.Action("Search", "Product", new { keyword = filter.Keyword, categories = filter.Categories, sortBy = sortBy, minPrice = filter.MinPrice, maxPrice = filter.MaxPrice });
             var paginator = new PaginatorVM(page, pageSize, total, Path);
             var categories = _categorySv.GetCategories().Select(c => new CategoryVM(c));
             var productListVM = new ProductListVM(paginator, filter, sortBy, categories, products);
@@ -51,9 +55,53 @@ namespace ElectronicComponentsShop.Controllers
         }
 
         // GET: ProductController/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(int id, string slug)
         {
-            return View();
+            var dto = _productSv.GetProductDetails(id);
+            if (dto.Slug != slug)
+                return Redirect($"/Product/{dto.Id}.{dto.Slug}");
+            double avgScore = _productSv.GetAverageScore(id);
+            var imageURLs = _productSv.GetImageURLs(id);
+            var numOfReviews = _productSv.GetNumOfReviews(id);
+            var details = new ProductDetailsVM(dto, imageURLs, avgScore, numOfReviews);
+            var relatedProducts = _productSv.GetRelatedProducts(id, dto.CategoryId).Select(p => new ProductVM(p));
+            ViewBag.RelatedProductCarousel = new ProductCarouselVM("Sản phẩm cùng danh mục", relatedProducts, 1);
+            ViewBag.Title = dto.Name;
+            ViewBag.BCTree = new Dictionary<string, string> { { "Trang chủ", "/" }, { "Danh sách sản phẩm", "/Product/List" }, { dto.Name, $"/Product/{dto.Id}.{dto.Name}" } };
+            return View(details);
+        }
+
+        public ActionResult GetRatingPartial(int id)
+        {
+            var rating = _productSv.GetScoreStats(id);
+            return PartialView("_Rating", rating);
+        }
+
+        public ActionResult GetReviewsPartial(int id, int page = 1)
+        {
+            var reviews = _productSv.GetPagedReviews(id, page).Select(r => new ReviewVM(r));
+            return PartialView("_Reviews", reviews);
+        }
+
+        public ActionResult GetProductCarouselPartial(string title)
+        {
+            if (title == "newest")
+            {
+                var newestProducts = _productSv.GetProducts(6, 0, "date_desc").Select(p => new ProductVM(p));
+                return PartialView("_ProductCarousel", new ProductCarouselVM("Sản phẩm mới", newestProducts, 1));
+            }
+            if (title == "mostviewed")
+            {
+                var mostViewedProducts = _productSv.GetProducts(6, 0, "views_desc").Select(p => new ProductVM(p));
+                return PartialView("_ProductCarousel", new ProductCarouselVM("Xem nhiều", mostViewedProducts, 2));
+            }
+            return Ok();
+        }
+
+        public ActionResult GetRelatedProductCarouselPartial(int id, int categoryId)
+        {
+            var relatedProducts = _productSv.GetRelatedProducts(id, categoryId).Select(p => new ProductVM(p));
+            return PartialView("_ProductCarousel", new ProductCarouselVM("Sản phẩm cùng danh mục", relatedProducts, 3));
         }
 
         // GET: ProductController/Create

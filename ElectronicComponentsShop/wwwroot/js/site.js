@@ -39,8 +39,7 @@ function setFavList() {
 
 function addToFavList(productId) {
     if (!favProductIds.includes(productId)) {
-        favProductIds.push(productId);
-        fetch(`/User/AddToFavourites/${productId}`).then(re => re.json()).then(data => setFavList()).catch(re => window.location.href = '/User/Login');
+        fetch(`/User/AddToFavourites/${productId}`).then(re => re.json()).then(data => { setFavList(); favProductIds.push(productId); }).catch(re => window.location.href = '/User/Login');
     }
     else {
         favProductIds = favProductIds.filter(i => i != productId);
@@ -109,12 +108,17 @@ function removeItem(productId) {
         renderCartTable();
 }
 
-function addToCart(productId) {
-    fetch(`/Cart/AddItem/${productId}`).then(re => re.json()).then(data => {
-        console.log('da dang nhap!');
+function addToCart(productId, quantity) {
+    fetch(`/Cart/AddItem/${productId}?quantity=${quantity}`).then(re => re.json()).then(data => {
         items = data;
         renderCart(items);
     }).catch(re => window.location.href = '/User/Login');
+}
+
+function addMultiple(productId) {
+    let quantity = parseInt(document.getElementById('product-details-quantity').value);
+    console.log(`add ${quantity} SP ${productId}`);
+    addToCart(productId, quantity);
 }
 
 // Mẫu html CartItem
@@ -251,18 +255,23 @@ function getCategories() {
     else
         return null;
 }
-function apply() {
-    let path = '/Product/Search';
-    let keyword = document.getElementById('search-box').value;
-    if (keyword == '' || keyword == null)
-        path = '/Product/List';
-    let prefix = () => path.includes('?') ? '&' : '?';
+
+function getParams() {
     var params = [];
     params.push({ name: 'keyword', value: document.getElementById('search-box').value });
     params.push({ name: 'categories', value: getCategories() });
     params.push({ name: 'minPrice', value: document.getElementById('price-min').value });
     params.push({ name: 'maxPrice', value: document.getElementById('price-max').value });
     params.push({ name: 'sortBy', value: document.getElementById('sort-selection').value });
+}
+function apply() {
+    console.log('submit');
+    let path = '/Product/Search';
+    let keyword = document.getElementById('search-box').value;
+    if (keyword == '' || keyword == null)
+        path = '/Product/List';
+    let prefix = () => path.includes('?') ? '&' : '?';
+    
     console.log(params);
     for (let param of params) {
         if (param.value != '' && param.value != null) {
@@ -272,6 +281,5 @@ function apply() {
     let value = document.getElementById('pageSize-selection').value;
     if (value != '9')
         path += `${prefix()}pageSize=${value}`;
-    console.log(path);
     window.location.href = path;
 }

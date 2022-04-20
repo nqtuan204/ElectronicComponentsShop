@@ -1,0 +1,125 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    double avg = 0;
+    var percents = new List<int>() { 0, 0, 0, 0, 0, 0 };
+    int total = Model.Sum(e => e.Value);
+    avg = Math.Ceiling((double)Model.Sum(e => e.Key * e.Value) / total);
+    for (int i = 1; i <= 5; i++)
+        if (Model.Keys.Contains(i))
+            percents[i] = Model[i] * 100 / total;
+}
+@model Dictionary<int, int>
+<!-- Rating -->
+<div class="col-md-3">
+    <div id="rating">
+        <div class="rating-avg">
+            <span>@avg</span>
+            <div class="rating-stars">
+                @if (avg >= 1)
+                {
+                    <i class="fa fa-star"></i>
+                }
+                else
+                {
+                    <i class="fa fa-star-o"></i>
+                }
+                @if (avg >= 2)
+                {
+                    <i class="fa fa-star"></i>
+                }
+                else
+                {
+                    <i class="fa fa-star-o"></i>
+                }
+                @if (avg >= 3)
+                {
+                    <i class="fa fa-star"></i>
+                }
+                else
+                {
+                    <i class="fa fa-star-o"></i>
+                }
+                @if (avg >= 4)
+                {
+                    <i class="fa fa-star"></i>
+                }
+                else
+                {
+                    <i class="fa fa-star-o"></i>
+                }
+                @if (avg >= 5)
+                {
+                    <i class="fa fa-star"></i>
+                }
+                else
+                {
+                    <i class="fa fa-star-o"></i>
+                }
+            </div>
+        </div>
+        <ul class="rating">
+            @for (int i = 5; i >= 1; i--)
+            {
+                <li>
+                    <div class="rating-stars">
+                        @if (i >= 1)
+                        {
+                            <i class="fa fa-star"></i>
+                        }
+                        else
+                        {
+                            <i class="fa fa-star-o"></i>
+                        }
+                        @if (i >= 2)
+                        {
+                            <i class="fa fa-star"></i>
+                        }
+                        else
+                        {
+                            <i class="fa fa-star-o"></i>
+                        }
+                        @if (i >= 3)
+                        {
+                            <i class="fa fa-star"></i>
+                        }
+                        else
+                        {
+                            <i class="fa fa-star-o"></i>
+                        }
+                        @if (i >= 4)
+                        {
+                            <i class="fa fa-star"></i>
+                        }
+                        else
+                        {
+                            <i class="fa fa-star-o"></i>
+                        }
+                        @if (i >= 5)
+                        {
+                            <i class="fa fa-star"></i>
+                        }
+                        else
+                        {
+                            <i class="fa fa-star-o"></i>
+                        }
+                    </div>
+                    <div class="rating-progress">
+                        <div style="width: @(percents[i])%;"></div>
+                    </div>
+                    @if (Model.Keys.Contains(i))
+                    {
+                        <span class="sum">@(Model[i])</span>
+                    }
+                    else
+                    {
+                        <span class="sum">0</span>
+                    }
+
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+<!-- /Rating -->

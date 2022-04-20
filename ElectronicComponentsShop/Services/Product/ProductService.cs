@@ -27,6 +27,8 @@ namespace ElectronicComponentsShop.Services.Product
         }
         public double GetAverageScore(int id)
         {
+            if (!_db.Reviews.Any(r => r.ProductId == id))
+                return 0;
             return _db.Reviews.Where(r => r.ProductId == id).Average(r => r.Score);
         }
         private Expression<Func<Entities.Product, dynamic>> SortExpression(string sortBy)
@@ -40,7 +42,7 @@ namespace ElectronicComponentsShop.Services.Product
             if (sortBy.StartsWith("name"))
                 return p => p.Name;
             if (sortBy.StartsWith("score"))
-                return p => p.Reviews.Average(r=>r.Score);
+                return p => p.Reviews.Average(r => r.Score);
             if (sortBy.StartsWith("price"))
                 return p => p.Price;
             return null;
@@ -59,7 +61,7 @@ namespace ElectronicComponentsShop.Services.Product
                 expressions.Add(p => p.Price <= filter.MaxPrice);
             if (!String.IsNullOrEmpty(filter.Keyword))
             {
-                filter.Keyword=filter.Keyword.ToLower();
+                filter.Keyword = filter.Keyword.ToLower();
                 expressions.Add(p => p.Name.ToLower().StartsWith(filter.Keyword));
             }
             return expressions;
@@ -98,6 +100,48 @@ namespace ElectronicComponentsShop.Services.Product
             foreach (var expression in filterExpressions)
                 products = products.Where(expression);
             return products.Count();
+        }
+
+        public ProductDetailsDTO GetProductDetails(int id)
+        {
+            var product = _db.Products.Include(p => p.Category).FirstOrDefault(p => p.Id == id);
+            if (product == null)
+                return null;
+            return new ProductDetailsDTO(product);
+        }
+
+        public IEnumerable<string> GetImageURLs(int id)
+        {
+            return _db.ProductImages.Where(i => i.ProductId == id).Select(i => i.URL);
+        }
+
+        public IEnumerable<ReviewDTO> GetAllReviews(int id)
+        {
+            return _db.Reviews.Include(r => r.User).Select(r => new ReviewDTO(r));
+        }
+
+        public int GetNumOfReviews(int id)
+        {
+            return _db.Reviews.Where(r => r.ProductId == id).Count();
+        }
+
+        public Dictionary<int, int> GetScoreStats(int id)
+        {
+            return _db.Reviews.Where(r => r.ProductId == id).GroupBy(r => r.Score).Select(g => new { Score = g.Key, NumberOfReviews = g.Count() }).ToDictionary(a => a.Score, a => a.NumberOfReviews);
+        }
+
+        public IEnumerable<ReviewDTO> GetPagedReviews(int id, int page)
+        {
+            return _db.Reviews.Include(r => r.User).Where(r => r.ProductId == id).OrderByDescending(r => r.CreatedAt).Select(r => new ReviewDTO(r)).Skip(5 * (page - 1)).Take(5);
+        }
+
+        public IEnumerable<ProductDTO> GetRelatedProducts(int id, int categoryId)
+        {
+            var avgScore = GetAverageScore(id);
+            var products = _db.Products.Where(p => p.CategoryId == categoryId).Where(p => p.Id != id);
+            var r = new Random();
+            int skip = r.Next(1, products.Count() - 7);
+            return products.OrderBy(p => p.Name).Skip(skip).Take(6).Select(p => new ProductDTO(p, avgScore));
         }
     }
 }

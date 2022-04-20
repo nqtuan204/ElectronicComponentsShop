@@ -9,7 +9,7 @@ namespace ElectronicComponentsShop.Services.Cart
     public interface ICartService
     {
         Task<IEnumerable<ItemDTO>> GetItems(int userId);
-        Task AddItem(int userId, int productId);
+        Task AddItem(int userId, int productId, int quantity);
         Task RemoveAll(int userId, int productId);
         Task Clear(int userId);
         Task Update(int userId, IEnumerable<ItemDTO> items);

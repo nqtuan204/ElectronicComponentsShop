@@ -74,6 +74,7 @@ namespace ElectronicComponentsShop
                     policyConfig.RequireClaim("Role", "Customer");
                 });
             });
+            services.AddMemoryCache();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -118,6 +119,10 @@ namespace ElectronicComponentsShop
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute(
+                    name: "product details",
+                    pattern: "/product/{id}.{slug}",
+                    defaults: new { controller = "Product", action = "Details" });
                 endpoints.MapControllerRoute(
                     name: "checkout",
                     pattern: "/Checkout",
