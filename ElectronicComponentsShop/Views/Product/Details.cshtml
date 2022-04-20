@@ -188,7 +188,6 @@
     var getPaginatorPartial = (page, pageSize, total, getList) => {
     fetch(`/Paginator/GetPaginatorPartial?page=${page}&pageSize=${pageSize}&total=${total}`).then(re => re.text()).then(data => document.getElementById('paginator-wrapper').innerHTML = data);
     getList(page);
-
 }
 
 var getList = (page) => { };
@@ -197,7 +196,7 @@ function getReviewsPartial(page) {
         console.log('get reviews of page ' + page);
     fetch('/Product/GetReviewsPartial/@Model.Id?page=' + page).then(re => re.text()).then(data => document.getElementById('reviews-wrapper').innerHTML = data);
 }
-    var total = parseInt('@Model.NumOfReviews');
+    let total = parseInt('@Model.NumOfReviews');
     getList = getReviewsPartial;
     if (total > 0) {
         fetch('/Product/GetRatingPartial/@Model.Id').then(re => re.text()).then(data => document.getElementById('rating-wrapper').innerHTML = data);

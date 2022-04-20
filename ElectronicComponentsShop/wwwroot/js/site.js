@@ -34,18 +34,21 @@ function getFavList() {
 }
 
 function setFavList() {
+    console.log('set FavList to' + favProductIds.length);
     document.getElementById('wish-list').innerHTML = favProductIds.length;
 }
 
 function addToFavList(productId) {
     if (!favProductIds.includes(productId)) {
-        fetch(`/User/AddToFavourites/${productId}`).then(re => re.json()).then(data => { setFavList(); favProductIds.push(productId); }).catch(re => window.location.href = '/User/Login');
+        fetch(`/User/AddToFavourites/${productId}`).then(re => re.json()).then(data => {
+            favProductIds.push(productId); setFavList();
+        }).catch(re => window.location.href = '/User/Login');
     }
     else {
-        favProductIds = favProductIds.filter(i => i != productId);
-        fetch(`/User/RemoveFromFavourites/${productId}`).then(re => re.json()).then(data => setFavList()).catch(re => window.location.href = '/User/Login');
+        fetch(`/User/RemoveFromFavourites/${productId}`).then(re => re.json()).then(data => {
+            favProductIds = favProductIds.filter(i => i != productId); setFavList();
+        }).catch(re => window.location.href = '/User/Login');
     }
-    setFavList();
 }
 
 var renderCart = (items) => {
@@ -239,47 +242,3 @@ function updateCart() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function getCategories() {
-    let checkeds = [];
-    let a = document.getElementsByName('categories');
-    for (let el of a)
-        if (el.checked)
-            checkeds.push(el.value);
-
-    if (checkeds.length > 0) {
-        let value = checkeds[0];
-        for (let i = 1; i < checkeds.length; i++)
-            value += `,${checkeds[i]}`;
-        return value;
-    }
-    else
-        return null;
-}
-
-function getParams() {
-    var params = [];
-    params.push({ name: 'keyword', value: document.getElementById('search-box').value });
-    params.push({ name: 'categories', value: getCategories() });
-    params.push({ name: 'minPrice', value: document.getElementById('price-min').value });
-    params.push({ name: 'maxPrice', value: document.getElementById('price-max').value });
-    params.push({ name: 'sortBy', value: document.getElementById('sort-selection').value });
-}
-function apply() {
-    console.log('submit');
-    let path = '/Product/Search';
-    let keyword = document.getElementById('search-box').value;
-    if (keyword == '' || keyword == null)
-        path = '/Product/List';
-    let prefix = () => path.includes('?') ? '&' : '?';
-    
-    console.log(params);
-    for (let param of params) {
-        if (param.value != '' && param.value != null) {
-            path += `${prefix()}${param.name}=${param.value}`;
-        }
-    }
-    let value = document.getElementById('pageSize-selection').value;
-    if (value != '9')
-        path += `${prefix()}pageSize=${value}`;
-    window.location.href = path;
-}

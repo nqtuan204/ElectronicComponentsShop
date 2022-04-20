@@ -5,7 +5,7 @@
     string[] values = new string[] { null, "views_desc", "date_desc", "date_asc", "name_asc", "name_desc", "score_desc", "price_desc", "price_asc" };
     string[] displays = new string[] { "Mặc định", "Xem nhiều", "Mới", "Cũ", "A->Z", "Z->A", "Đánh giá", "Giá cao", "Giá thấp" };
     int[] pageSizes = { 9, 15, 18, 24 };
-    var categoryIds = String.IsNullOrEmpty(Model.Filter.Categories) ? new List<int>() : Model.Filter.Categories.Split(",").Select(c=>int.Parse(c)).ToList();
+    var categoryIds = String.IsNullOrEmpty(Model.Filter.Categories) ? new List<int>() : Model.Filter.Categories.Split(",").Select(c => int.Parse(c)).ToList();
 }
 
 @model ProductListVM
@@ -75,7 +75,7 @@
                 <select class="input-select" id="pageSize-selection">
                     @foreach (var size in pageSizes)
                     {
-                        <option value="@size" selected="@(size==Model.Paginator.PageSize)">@size</option>
+                        <option value="@size" selected="@(size==Model.PageSize)">@size</option>
                     }
                 </select>
             </label>
@@ -86,25 +86,90 @@
         </ul>
     </div>
     <!-- /store top filter -->
-    @if (Model.Products.Count() == 0)
-    {
-        <h4>Không có sản phẩm phù hợp, kiểm tra lại bộ lọc.</h4>
-    }
-    else
-    {
-        <!-- store products -->
-        <div class="row">
-            <!-- render products here-->
-            @foreach (var product in Model.Products)
-            {
-                Html.RenderPartialAsync("_Product", product);
-            }
-        </div>
-        <!-- /store products -->
-        @if (Model.Paginator.LastPage > 1)
-        {
-            <partial name="_Paginator" model="@Model.Paginator" />
-        }
-    }
+    <div id="product-grid-wrapper">
+
+    </div>
+    <div id="paginator-wrapper">
+
+    </div>
 </div>
 <!-- /STORE -->
+
+<script>
+    getPaginatorPartial('@Model.Page', '@Model.PageSize');
+
+    async function getPaginatorPartial(page, pageSize) {
+        let total = await getProductGridPartial(page);
+        fetch(`/Paginator/GetPaginatorPartial?page=${page}&pageSize=${pageSize}&total=${total}`).then(re => re.text()).then(data => document.getElementById('paginator-wrapper').innerHTML = data);
+        scroll({ top: 0, left: 0, behavior: 'smooth' });
+    }
+
+    function prefix(path) {
+        return path.includes('?') ? '&' : '?';
+    }
+
+    async function getProductGridPartial(page) {
+        let path = getPath();
+        let qs = getQueryString();
+        if (page > 1)
+            qs = qs + prefix(qs) + `page=${page}`;
+        window.history.pushState({}, document.title, path + qs);
+        fetch(`/Product/GetProductGridPartial${qs}`).then(re => re.text()).then(data => document.getElementById('product-grid-wrapper').innerHTML = data);
+        let total = fetch(`/Product/Count${qs}`).then(re => re.json()).then(data => parseInt(data));
+        getTotal = async (value) => value;
+        return await getTotal(total);
+    }
+
+    function getPath() {
+        let keyword = document.getElementById('search-box').value;
+        if (keyword == null || keyword == '' || keyword == undefined)
+            return '/Product/List';
+        return '/Product/Search';
+    }
+
+    function getQueryString() {
+        let qs = '';
+        let params = getParams();
+        for (let param of params) {
+            if (param.value != '' && param.value != null) {
+                qs += `${prefix(qs)}${param.name}=${param.value}`;
+            }
+        }
+        let value = document.getElementById('pageSize-selection').value;
+        if (value != '9')
+            qs += `${prefix(qs)}pageSize=${value}`;
+        return qs;
+    }
+
+    function getParams() {
+        let params = [];
+        params.push({ name: 'keyword', value: document.getElementById('search-box').value });
+        params.push({ name: 'categories', value: getCategories() });
+        params.push({ name: 'minPrice', value: document.getElementById('price-min').value });
+        params.push({ name: 'maxPrice', value: document.getElementById('price-max').value });
+        params.push({ name: 'sortBy', value: document.getElementById('sort-selection').value });
+        return params;
+    }
+
+    function apply() {
+        let pageSize = document.getElementById('pageSize-selection').value;
+        getPaginatorPartial(1, pageSize, getProductGridPartial);
+    }
+
+    function getCategories() {
+        let checkeds = [];
+        let a = document.getElementsByName('categories');
+        for (let el of a)
+            if (el.checked)
+                checkeds.push(el.value);
+
+        if (checkeds.length > 0) {
+            let value = checkeds[0];
+            for (let i = 1; i < checkeds.length; i++)
+                value += `,${checkeds[i]}`;
+            return value;
+        }
+        else
+            return null;
+    }
+</script>

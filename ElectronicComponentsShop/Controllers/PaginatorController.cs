@@ -10,9 +10,9 @@ namespace ElectronicComponentsShop.Controllers
 {
     public class PaginatorController : Controller
     {
-        public ActionResult GetPaginatorPartial(NoNavPaginatorVM paginator)
+        public ActionResult GetPaginatorPartial(PaginatorVM paginator)
         {
-            return PartialView("_NoNavPaginator", paginator);
+            return PartialView("_Paginator", paginator);
         }
         // GET: PaginatorController
         public ActionResult Index()

@@ -1,63 +1,73 @@
-﻿@model PaginatorVM
-@{ 
-    string prefix = Model.Path.Contains('?') ? "&" : "?";
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    int From = (Model.Page - 1) * Model.PageSize + 1;
+    int To = (Model.Page * Model.PageSize > Model.Total) ? Model.Total : Model.Page * Model.PageSize;
+    int LastPage = (int)Math.Ceiling((double)Model.Total / Model.PageSize);
+    int Displays = 4;
 }
+@model PaginatorVM
 <!-- store bottom filter -->
 <div class="store-filter clearfix">
-    <span class="store-qty">Hiển thị từ @Model.From đến @Model.To trên @Model.Total SP</span>
+    <span class="store-qty">Hiển thị từ @From đến @To trên @Model.Total SP</span>
     <ul class="store-pagination">
         @if (Model.Page > 1)
         {
             if (Model.Page == 2)
             {
-                <li><a href="@Model.Path"><i class="fa fa-angle-left"></i></a></li>
+                <li><a style="cursor: pointer;" onclick="getPaginatorPartial(1,'@Model.PageSize','@Model.Total')"><i class="fa fa-angle-left"></i></a></li>
             }
             else
             {
-                <li><a href="@($"{Model.Path}{prefix}page={Model.Page-1}")"><i class="fa fa-angle-left"></i></a></li>
+                <li><a style="cursor: pointer;" onclick="getPaginatorPartial('@(Model.Page-1)','@Model.PageSize','@Model.Total')"><i class="fa fa-angle-left"></i></a></li>
             }
-            <li><a href="@Model.Path">1</a></li>
+            <li><a style="cursor: pointer;" onclick="getPaginatorPartial(1,'@Model.PageSize','@Model.Total')">1</a></li>
         }
 
-        @if (Model.Page - Model.Displays > 2)
+        @if (Model.Page - Displays > 2)
         {
             <li>...</li>
-            for (int p = Model.Page - Model.Displays; p <= Model.Page - 1; p++)
+            for (int p = Model.Page - Displays; p <= Model.Page - 1; p++)
             {
-                <li><a href="@($"{Model.Path}{prefix}page={p}")">@p</a></li>
+                <li><a style="cursor: pointer;" onclick="getPaginatorPartial('@p','@Model.PageSize','@Model.Total')">@p</a></li>
             }
         }
         else
         {
             for (int p = 2; p <= Model.Page - 1; p++)
             {
-                <li><a href="@($"{Model.Path}{prefix}page={p}")">@p</a></li>
+                <li><a style="cursor: pointer;" onclick="getPaginatorPartial('@p','@Model.PageSize','@Model.Total')">@p</a></li>
             }
         }
 
         <li class="active">@Model.Page</li>
 
-        @if (Model.Page + Model.Displays < Model.LastPage - 1)
+        @if (Model.Page + Displays < LastPage - 1)
         {
-            for (int p = Model.Page + 1; p <= Model.Page + Model.Displays; p++)
+            for (int p = Model.Page + 1; p <= Model.Page + Displays; p++)
             {
-                <li><a href="@($"{Model.Path}{prefix}page={p}")">@p</a></li>
+                <li><a style="cursor: pointer;" onclick="getPaginatorPartial('@p','@Model.PageSize','@Model.Total')">@p</a></li>
             }
             <li>...</li>
         }
         else
         {
-            for (int p = Model.Page + 1; p <= Model.LastPage - 1; p++)
+            for (int p = Model.Page + 1; p <= LastPage - 1; p++)
             {
-                <li><a href="@($"{Model.Path}{prefix}page={p}")">@p</a></li>
+                <li><a style="cursor: pointer;" onclick="getPaginatorPartial('@p','@Model.PageSize','@Model.Total')">@p</a></li>
             }
         }
 
-        @if (Model.Page < Model.LastPage)
+        @if (Model.Page < LastPage)
         {
-            <li><a href="@($"{Model.Path}{prefix}page={Model.LastPage}")">@Model.LastPage</a></li>
-            <li><a href="@($"{Model.Path}{prefix}page={Model.Page+1}")"><i class="fa fa-angle-right"></i></a></li>
+            <li><a style="cursor: pointer;" onclick="getPaginatorPartial('@LastPage','@Model.PageSize','@Model.Total')">@LastPage</a></li>
+            <li><a style="cursor: pointer;" onclick="getPaginatorPartial('@(Model.Page+1)', '@Model.PageSize', '@Model.Total')"><i class="fa fa-angle-right"></i></a></li>
         }
     </ul>
 </div>
 <!-- /store bottom filter -->
+
+<script>
+    
+</script>

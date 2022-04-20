@@ -93,7 +93,6 @@ namespace ElectronicComponentsShop.Controllers
         [Authorize]
         public async Task<IActionResult> AddToFavourites(int id)
         {
-            Console.WriteLine(id);
             int userId = GetUserId();
             if (!_userSv.GetFavProductIds(userId).Contains(id))
                 await _userSv.AddToFavourites(userId, id);

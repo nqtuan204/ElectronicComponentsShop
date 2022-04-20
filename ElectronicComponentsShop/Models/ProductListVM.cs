@@ -6,19 +6,19 @@ namespace ElectronicComponentsShop.Models
 {
     public class ProductListVM
     {
-        public PaginatorVM Paginator { get; set; }
+        public int Page { get; set; }
+        public int PageSize { get; set; }
         public ProductFilterVM Filter { get; set; }
         public string SortBy { get; set; }
         public IEnumerable<CategoryVM> Categories { get; set; }
-        public IEnumerable<ProductVM> Products { get; set; }
 
-        public ProductListVM(PaginatorVM paginator, ProductFilterVM filter, string sortBy, IEnumerable<CategoryVM> categories, IEnumerable<ProductVM> products)
+        public ProductListVM(int page, int pageSize, ProductFilterVM filter, string sortBy, IEnumerable<CategoryVM> categories)
         {
-            Paginator = paginator;
+            Page = page;
+            PageSize = pageSize;
             Filter = filter;
             SortBy = sortBy;
             Categories = categories;
-            Products = products;
         }
     }
 }
