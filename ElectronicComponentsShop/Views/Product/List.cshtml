@@ -80,10 +80,6 @@
                 </select>
             </label>
         </div>
-        <ul class="store-grid">
-            <li class="active"><i class="fa fa-th"></i></li>
-            <li><a href="#"><i class="fa fa-th-list"></i></a></li>
-        </ul>
     </div>
     <!-- /store top filter -->
     <div id="product-grid-wrapper">
@@ -99,9 +95,9 @@
     getPaginatorPartial('@Model.Page', '@Model.PageSize');
 
     async function getPaginatorPartial(page, pageSize) {
+        scroll({ top: 0, left: 0, behavior: 'smooth' });
         let total = await getProductGridPartial(page);
         fetch(`/Paginator/GetPaginatorPartial?page=${page}&pageSize=${pageSize}&total=${total}`).then(re => re.text()).then(data => document.getElementById('paginator-wrapper').innerHTML = data);
-        scroll({ top: 0, left: 0, behavior: 'smooth' });
     }
 
     function prefix(path) {
