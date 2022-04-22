@@ -3,15 +3,17 @@ using System;
 using ElectronicComponentsShop.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace ElectronicComponentsShop.Database.Migrations
 {
     [DbContext(typeof(ECSDbContext))]
-    partial class ECSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220421164924_Table_Users_Remove_Column_Password2_Add_Columns_ResetPasswordToken_and_ResetPasswordTokenExpireAt")]
+    partial class Table_Users_Remove_Column_Password2_Add_Columns_ResetPasswordToken_and_ResetPasswordTokenExpireAt
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

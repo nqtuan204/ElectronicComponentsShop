@@ -14,7 +14,6 @@ namespace ElectronicComponentsShop.DTOs
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public string Password { get; set; }
-        public string Password2 { get; set; }
         public NewUserDTO(NewUserVM user)
         {
             FirstName = user.FirstName;
@@ -22,7 +21,6 @@ namespace ElectronicComponentsShop.DTOs
             Email = user.Email;
             PhoneNumber = user.PhoneNumber;
             Password = user.Password;
-            Password2 = user.Password2;
         }
 
     }

@@ -142,6 +142,7 @@ namespace ElectronicComponentsShop.Database
                 action.Property(user => user.Email).HasMaxLength(320);
                 action.Property(user => user.FirstName).HasMaxLength(20);
                 action.Property(user => user.LastName).HasMaxLength(20);
+                action.Property(user => user.ResetPasswordToken).HasMaxLength(50);
             });
 
             builder.Entity<UserRole>(action =>

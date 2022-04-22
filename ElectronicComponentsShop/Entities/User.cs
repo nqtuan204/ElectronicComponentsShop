@@ -12,10 +12,11 @@ namespace ElectronicComponentsShop.Entities
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-        public string Password2 { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime CreatedAt { get; set; }
+        public string ResetPasswordToken { get; set; }
+        public DateTime ResetPasswordTokenExpireAt { get; set; }
         public Nullable<DateTime> ModifiedAt { get; set; }
         public IEnumerable<UserRole> UserRoles { get; set; }
         public IEnumerable<Order> Orders { get; set; }
@@ -29,7 +30,6 @@ namespace ElectronicComponentsShop.Entities
             PhoneNumber = dto.PhoneNumber;
             Email = dto.Email;
             Password = dto.Password;
-            Password2 = dto.Password2;
             FirstName = dto.FirstName;
             LastName = dto.LastName;
             CreatedAt = DateTime.Now;

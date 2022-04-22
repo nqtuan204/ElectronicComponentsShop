@@ -44,7 +44,7 @@ namespace ElectronicComponentsShop.Controllers
             ViewBag.Title = "Thanh toán";
             ViewBag.BCTree = new Dictionary<string, string> { { "Trang chủ", "/" }, { "Thanh toán", "/Checkout" } };
             int userId = GetUserId();
-            var user = _userSv.GetUser(userId);
+            var user = _userSv.GetUserById(userId);
             var paymentTypes = _orderSv.GetAllPaymentTypes();
             var items = await _cartSv.GetItems(userId);
             if (items.Count() == 0)

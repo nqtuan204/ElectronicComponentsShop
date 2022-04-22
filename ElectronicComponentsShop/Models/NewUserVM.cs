@@ -28,15 +28,6 @@ namespace ElectronicComponentsShop.Models
         [Display(Name = "Xác nhận mật khẩu")]
         public string ConfirmPassword { get; set; }
 
-        [Required(ErrorMessage = "Mật khẩu 2 không được phép bỏ trống.")]
-        [RegularExpression(@"[\w]{6,}", ErrorMessage = "Mật khẩu 2 phải có tối thiểu 6 ký tự")]
-        [Display(Name = "Mật khẩu")]
-        public string Password2 { get; set; }
-
-        [Compare("Password2", ErrorMessage = "Các mật khẩu đã nhập không khớp. Hãy thử lại.")]
-        [Display(Name = "Xác nhận mật khẩu")]
-        public string ConfirmPassword2 { get; set; }
-
         [Required(ErrorMessage = "Hãy nhập tên của bạn.")]
         [RegularExpression(@"[A-Za-zưùúủũụừứửữựêèéẻẽẹềếểễệôơòóỏõọồốỏõọờớởỡợâăàáảãạầấẩẫậằắẳẵặìíỉĩị\s]{2,}", ErrorMessage = "Vui lòng nhập đúng tên của bạn.")]
         [Display(Name = "Tên")]

@@ -28,7 +28,7 @@ namespace ElectronicComponentsShop.Services.Jwt
 
             //payload
             var claims = GetClaims(user);
-            var payload = new JwtPayload(_config["Jwt:Issuer"], _config["Jwt:Audience"], claims, DateTime.Now, DateTime.Now.AddMinutes(5));
+            var payload = new JwtPayload(_config["Jwt:Issuer"], _config["Jwt:Audience"], claims, DateTime.Now, DateTime.Now.AddMinutes(30));
 
             //jwt string
             var jst = new JwtSecurityToken(header, payload);

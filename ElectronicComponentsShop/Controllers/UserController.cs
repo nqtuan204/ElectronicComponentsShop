@@ -9,7 +9,9 @@ using ElectronicComponentsShop.DTOs;
 using ElectronicComponentsShop.Database;
 using ElectronicComponentsShop.Services.User;
 using ElectronicComponentsShop.Services.Jwt;
+using ElectronicComponentsShop.Services.Email;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Configuration;
 
 namespace ElectronicComponentsShop.Controllers
 {
@@ -18,12 +20,15 @@ namespace ElectronicComponentsShop.Controllers
         private readonly ECSDbContext _db;
         private readonly IUserService _userSv;
         private readonly IJwtService _jwt;
-
-        public UserController(ECSDbContext db, IUserService userSv, IJwtService jwt)
+        private readonly IEmailService _emailSv;
+        private readonly IConfiguration _config;
+        public UserController(ECSDbContext db, IUserService userSv, IJwtService jwt, IEmailService emailSv, IConfiguration config)
         {
             _db = db;
             _userSv = userSv;
             _jwt = jwt;
+            _emailSv = emailSv;
+            _config = config;
         }
 
         [HttpPost]
@@ -68,7 +73,7 @@ namespace ElectronicComponentsShop.Controllers
         [HttpPost]
         public IActionResult Login(LoginUserVM user)
         {
-            var dto = _userSv.GetUser(user.PhoneNumberOrEmail, user.Password);
+            var dto = _userSv.GetLoginUser(user.PhoneNumberOrEmail, user.Password);
             if (dto == null)
             {
                 ModelState.AddModelError("PhoneNumberOrEmail", "Tài khoản hoặc mật khẩu không đúng.");
@@ -120,9 +125,53 @@ namespace ElectronicComponentsShop.Controllers
             return Json(_userSv.GetFavProductIds(userId));
         }
 
-        public ActionResult Details(int id)
+        [Authorize]
+        public ActionResult Profile()
         {
             return View();
+        }
+
+        public ActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> ResetPassword(ResetPasswordVM resetPasswordVM)
+        {
+            Console.WriteLine("Require reset password");
+            if (!ModelState.IsValid)
+                return View("ForgotPassword", resetPasswordVM);
+            var userId = _userSv.GetUserByEmail(resetPasswordVM.Email).Id;
+            string token = await _userSv.GenerateResetPasswordToken(userId);
+            string url = _config["URL"] + "/User/ConfirmResetPassword?token=" + token;
+            string title = "[linhkiendientu204] Yêu cầu thiết lập lại mật khẩu";
+            string content = $"Ai đó đã yêu cầu thiết lập lại mật khẩu bằng email của bạn, nếu đó là bạn, vui lòng nhấn vào liên kết sau để xác nhận thiết lập lại mật khẩu: " + url;
+            _emailSv.Send(title, content, resetPasswordVM.Email);
+            return View("ResetPassword",resetPasswordVM.Email);
+        }
+
+        
+        public async Task<ActionResult> ConfirmResetPassword(string token)
+        {
+            token = Request.QueryString.Value.Replace("?token=", "");
+            Console.WriteLine(token);
+            if (_userSv.IsResetPasswordTokenNullOrExpire(token))
+                return View("ExpiredResetPasswordToken");
+
+            var user = _userSv.GetUserByResetPasswordToken(token);
+            string newPassword = await _userSv.ResetPassword(user.Id);
+            string title = "Thiết lập lại mật khẩu";
+            string content = $"Bạn đã xác nhận thiết lập lại mật khẩu. Mật khẩu mới của bạn là: {newPassword}";
+            _emailSv.Send(title, content, user.Email);
+            return View("ConfirmResetPassword", user.Email);
+        }    
+
+        
+        public IActionResult IsExist(string Email)
+        {
+            Console.WriteLine("Check if email exist!");
+            return Json(_userSv.IsEmailExist(Email));
         }
 
         // GET: UserController/Create

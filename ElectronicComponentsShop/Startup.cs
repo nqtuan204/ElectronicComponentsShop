@@ -19,6 +19,7 @@ using Microsoft.IdentityModel.Tokens;
 using ElectronicComponentsShop.Services.Jwt;
 using ElectronicComponentsShop.Services.Cart;
 using ElectronicComponentsShop.Services.Order;
+using ElectronicComponentsShop.Services.Email;
 
 namespace ElectronicComponentsShop
 {
@@ -53,6 +54,7 @@ namespace ElectronicComponentsShop
             services.AddTransient<IJwtService, JwtService>();
             services.AddTransient<ICartService, CartService>();
             services.AddTransient<IOrderService, OrderService>();
+            services.AddTransient<IEmailService, EmailService>();
             services.AddAuthentication("Bearer").AddJwtBearer("Bearer", options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters()
@@ -119,6 +121,10 @@ namespace ElectronicComponentsShop
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute(
+                    name: "confirm reset password",
+                    pattern: "/User/ConfirmResetPassword/{token}",
+                    defaults: new { controller = "User", action = "ConfirmResetPassword" });
                 endpoints.MapControllerRoute(
                     name: "product details",
                     pattern: "/product/{id}.{slug}",
