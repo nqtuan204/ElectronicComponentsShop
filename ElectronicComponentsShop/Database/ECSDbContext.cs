@@ -122,7 +122,7 @@ namespace ElectronicComponentsShop.Database
                 action.HasKey(review => review.Id);
                 action.Property(review => review.Id).ValueGeneratedOnAdd();
                 action.HasOne(review => review.Product).WithMany(product => product.Reviews).HasForeignKey(review => review.ProductId);
-                action.HasOne(review => review.User).WithMany(user => user.Reviews).HasForeignKey(review => review.UserId);
+                action.HasOne(review => review.User).WithMany(user => user.Reviews).HasForeignKey(review => review.UserId).IsRequired(false);
                 action.Property(review => review.Content).HasMaxLength(500).IsRequired();
             });
 

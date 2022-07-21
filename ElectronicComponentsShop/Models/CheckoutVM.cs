@@ -37,14 +37,14 @@ namespace ElectronicComponentsShop.Models
         public int payment { get; set; }
         public IEnumerable<ItemVM> Items { get; set; }
         public CheckoutVM() { }
-        public CheckoutVM(UserDTO user, IEnumerable<ItemVM> items, Dictionary<int, string> paymentTypes, decimal? amount)
+        public CheckoutVM(UserDTO user, IEnumerable<ItemVM> items, Dictionary<int, string> paymentTypes, decimal amount)
         {
             Email = user.Email;
             FullName = $"{user.LastName} {user.FirstName}";
             PhoneNumber = user.PhoneNumber;
             PaymentTypes = paymentTypes;
             Items = items;
-            Amount = GetFormattedPrice(amount);
+            Amount = amount == 0 ? "Liên hệ" : amount.ToString("0,0").Replace(',', '.');
         }
 
         private string GetFormattedPrice(decimal? price)

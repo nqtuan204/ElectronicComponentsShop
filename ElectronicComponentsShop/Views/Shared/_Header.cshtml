@@ -53,7 +53,7 @@
                     <div class="header-search">
                         <form asp-action="Search" asp-controller="Product" method="get">
                             <input class="input" type="text" placeholder="Nhập tên sản phẩm" value="@ViewBag.keyword" id="search-box" name="keyword">
-                            <button class="search-btn" type="button" type="submit">Search</button>
+                            <button class="search-btn" type="submit">Search</button>
                         </form>
                     </div>
                 </div>
@@ -81,12 +81,8 @@
                                 <div class="cart-list" id="cart-item-list">
                                     <!--render cartitems here-->
                                 </div>
-                                <div class="cart-summary" id="cart-total">
+                                <div class="cart-summary"">
                                     Không có sản phẩm nào
-                                </div>
-                                <div class="cart-btns" id="cart-buttons" hidden>
-                                    <a href="/Cart">Xem giỏ hàng</a>
-                                    <a href="/CheckOut">Thanh toán  <i class="fa fa-arrow-circle-right"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -127,4 +123,8 @@
     </div>
     <!-- /container -->
 </nav>
-<!-- /NAVIGATION -->
+<!-- /NAVIGATION --> 
+<script type="text/html" id="empty-summary-cart">
+    <div class="cart-list" id="cart-item-list"></div>
+    <div class="cart-summary" id="cart-total">Không có sản phẩm nào</div>
+</script>

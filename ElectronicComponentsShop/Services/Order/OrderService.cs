@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ElectronicComponentsShop.Database;
 using ElectronicComponentsShop.Entities;
 using ElectronicComponentsShop.DTOs;
+using Microsoft.EntityFrameworkCore;
 
 namespace ElectronicComponentsShop.Services.Order
 {
@@ -29,6 +30,16 @@ namespace ElectronicComponentsShop.Services.Order
             await _db.SaveChangesAsync();
             await _db.OrderItems.AddRangeAsync(dto.Items.Select(item => new OrderItem(order.Id, item.Key, item.Value)));
             await _db.SaveChangesAsync();
+        }
+
+        public IEnumerable<UserOrderDTO> GetUserOrdersByPaymentType(int userId, int paymenTypeId)
+        {
+            return _db.Orders.Include(order => order.Items).Include(order => order.OrderState).AsSplitQuery().Where(order => order.UserId == userId && order.PaymentTypeId == paymenTypeId).Select(order => new UserOrderDTO(order));
+        }
+
+        public IEnumerable<UserOrderDTO> GetAllUserOrders(int userId)
+        {
+            return _db.Orders.Include(order => order.Items).Include(order => order.OrderState).Where(order => order.UserId == userId).Select(order => new UserOrderDTO(order));
         }
     }
 }

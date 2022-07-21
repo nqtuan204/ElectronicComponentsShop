@@ -103,7 +103,7 @@
                                 <span class="qty-down">-</span>
                             </div>
                         </div>
-                        <button class="add-to-cart-btn" type="button" onclick="addMultiple('@Model.Id')"><i class="fa fa-shopping-cart"></i> Thêm vào giỏ hàng</button>
+                        <button class="add-to-cart-btn" type="button" onclick="addToCart('@Model.Id',parseInt(document.getElementById('product-details-quantity').value))"><i class="fa fa-shopping-cart"></i> Thêm vào giỏ hàng</button>
                     </div>
 
                     <ul class="product-btns">
@@ -158,8 +158,6 @@
                                     <h4>Chưa có đánh giá cho sản phẩm này</h4>
                                 </div>
                             }
-
-
                         </div>
                         <!-- /tab2  -->
                     </div>
@@ -185,21 +183,19 @@
 
 
 <script>
-    var getPaginatorPartial = (page, pageSize, total, getList) => {
+var getPaginatorPartial = (page, pageSize, total) => {
     fetch(`/Paginator/GetPaginatorPartial?page=${page}&pageSize=${pageSize}&total=${total}`).then(re => re.text()).then(data => document.getElementById('paginator-wrapper').innerHTML = data);
-    getList(page);
+    getReviewsPartial(page);
 }
-
-var getList = (page) => { };
 
 function getReviewsPartial(page) {
         console.log('get reviews of page ' + page);
     fetch('/Product/GetReviewsPartial/@Model.Id?page=' + page).then(re => re.text()).then(data => document.getElementById('reviews-wrapper').innerHTML = data);
 }
-    let total = parseInt('@Model.NumOfReviews');
-    getList = getReviewsPartial;
-    if (total > 0) {
-        fetch('/Product/GetRatingPartial/@Model.Id').then(re => re.text()).then(data => document.getElementById('rating-wrapper').innerHTML = data);
-        getPaginatorPartial(1, 5, total, getReviewsPartial);
-    }
+
+let total = parseInt('@Model.NumOfReviews');
+if (total > 0) {
+    fetch('/Product/GetRatingPartial/@Model.Id').then(re => re.text()).then(data => document.getElementById('rating-wrapper').innerHTML = data);
+    getPaginatorPartial(1, 5, total, getReviewsPartial);
+}
 </script>

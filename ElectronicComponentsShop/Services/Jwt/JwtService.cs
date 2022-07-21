@@ -23,6 +23,7 @@ namespace ElectronicComponentsShop.Services.Jwt
         {
             //header
             var securityKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_config["Jwt:SecurityKey"]));
+
             var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var header = new JwtHeader(signingCredentials);
 

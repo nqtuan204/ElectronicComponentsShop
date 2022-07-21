@@ -2,6 +2,8 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
+    ViewBag.Title = "Thanh toán";
+    ViewBag.BCTree = new Dictionary<string, string> { { "Trang chủ", "/" }, { "Thanh toán", "/Checkout" } };
 }
 @model CheckoutVM
 
@@ -125,29 +127,5 @@
 
 
 <script>
-    var locals = [];
-    fetch('/local.json').then(re => re.json()).then(data => {
-        locals = data;
-        document.getElementById('Province').innerHTML = '<option value="" disabled selected>Tỉnh/thành phố</option>';
-        for (let province of locals) {
-            document.getElementById('Province').innerHTML += `<option value="${province.name}">${province.name}</option>`
-        }
-        selectDistricts();
-    });
-
-    function selectDistricts() {
-        document.getElementById('District').innerHTML = '<option value="" disabled selected>Quận/huyện</option>';;
-        document.getElementById('Ward').innerHTML = '<option value="" disabled selected>Phường/xã</option>';;
-        var province = locals.filter(p => p.name == document.getElementById('Province').value)[0];
-        for (let district of province.districts)
-            document.getElementById('District').innerHTML += `<option value="${district.name}">${district.name}</option>`;
-    }
-
-    function selectWards() {
-        document.getElementById('Ward').innerHTML = '<option value="" disabled selected>Phường/xã</option>';
-        var province = locals.filter(p => p.name == document.getElementById('Province').value)[0];
-        let district = province.districts.filter(d => d.name == document.getElementById('District').value)[0];
-        for (let ward of district.wards)
-            document.getElementById('Ward').innerHTML += `<option value="${ward.name}">${ward.name}</option>`;
-    }
+    
 </script>

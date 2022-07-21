@@ -37,24 +37,20 @@ namespace ElectronicComponentsShop
         {
             services.AddControllersWithViews();
             bool IsDevelopment = (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development");
-            Action<DbContextOptionsBuilder> optionsAction = options => options.UseNpgsql(Configuration.GetConnectionString("PgSqlConnection"));
-            if (!IsDevelopment)
-            {
-                string connectionUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
-                var databaseUri = new Uri(connectionUrl);
-                string db = databaseUri.LocalPath.TrimStart('/');
-                string[] userInfo = databaseUri.UserInfo.Split(':', StringSplitOptions.RemoveEmptyEntries);
-                string connectionString = $"User ID={userInfo[0]};Password={userInfo[1]};Host={databaseUri.Host};Port={databaseUri.Port};Database={db};Pooling=true;SSL Mode=Require;Trust Server Certificate=True;";
-                optionsAction = options => options.UseNpgsql(connectionString);
-            }
-            services.AddDbContext<ECSDbContext>(optionsAction);
-            services.AddTransient<IProductService, ProductService>();
-            services.AddTransient<ICategoryService, CategoryService>();
-            services.AddTransient<IUserService, UserService>();
-            services.AddTransient<IJwtService, JwtService>();
-            services.AddTransient<ICartService, CartService>();
-            services.AddTransient<IOrderService, OrderService>();
-            services.AddTransient<IEmailService, EmailService>();
+            string connectionUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+            var databaseUri = new Uri(connectionUrl);
+            string db = databaseUri.LocalPath.TrimStart('/');
+            string[] userInfo = databaseUri.UserInfo.Split(':', StringSplitOptions.RemoveEmptyEntries);
+            string connectionString = $"User ID={userInfo[0]};Password={userInfo[1]};Host={databaseUri.Host};Port={databaseUri.Port};Database={db};Pooling=true;SSL Mode=Require;Trust Server Certificate=True;";
+
+            services.AddDbContext<ECSDbContext>(options => options.UseNpgsql(connectionString));
+            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IJwtService, JwtService>();
+            services.AddScoped<ICartService, CartService>();
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IEmailService, EmailService>();
             services.AddAuthentication("Bearer").AddJwtBearer("Bearer", options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters()

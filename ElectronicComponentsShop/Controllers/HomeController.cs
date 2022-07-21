@@ -30,7 +30,6 @@ namespace ElectronicComponentsShop.Controllers
         
         public IActionResult Index()
         {
-            ViewBag.Title = "Linh kiện điện tử 204";
             IEnumerable<CategoryVM> categories;
             ProductCarouselVM[] productCarousels = new ProductCarouselVM[] { };
             if (!_cache.TryGetValue("categories",out categories) && !_cache.TryGetValue("productCarousels", out productCarousels))

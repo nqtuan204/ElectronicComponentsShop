@@ -72,7 +72,7 @@ namespace ElectronicComponentsShop.Controllers
             var relatedProducts = _productSv.GetRelatedProducts(id, dto.CategoryId).Select(p => new ProductVM(p));
             ViewBag.RelatedProductCarousel = new ProductCarouselVM("Sản phẩm cùng danh mục", relatedProducts, 1);
             ViewBag.Title = dto.Name;
-            ViewBag.BCTree = new Dictionary<string, string> { { "Trang chủ", "/" }, { "Danh sách sản phẩm", "/Product/List" }, { dto.Name, $"/Product/{dto.Id}.{dto.Name}" } };
+            ViewBag.BCTree = new Dictionary<string, string> { { "Trang chủ", "/" }, { "Danh sách sản phẩm", "/Product/List" }, { dto.Name, $"/Product/{dto.Id}.{dto.Slug}" } };
             return View(details);
         }
 

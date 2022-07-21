@@ -3,15 +3,17 @@ using System;
 using ElectronicComponentsShop.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace ElectronicComponentsShop.Database.Migrations
 {
     [DbContext(typeof(ECSDbContext))]
-    partial class ECSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220424074735_Table_Products_Change_Columnn_Price_To_NotNull")]
+    partial class Table_Products_Change_Columnn_Price_To_NotNull
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -541,7 +543,9 @@ namespace ElectronicComponentsShop.Database.Migrations
 
                     b.HasOne("ElectronicComponentsShop.Entities.User", "User")
                         .WithMany("Reviews")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Product");
 
