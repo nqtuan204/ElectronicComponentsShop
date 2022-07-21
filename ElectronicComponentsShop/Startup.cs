@@ -38,6 +38,8 @@ namespace ElectronicComponentsShop
             services.AddControllersWithViews();
             bool IsDevelopment = (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development");
             string connectionUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+            if (IsDevelopment)
+                connectionUrl = $"postgres://cwovrugcequyoe:cd3f847c828ead6df17f6e9e3d50c57bf91927d69f0f15d1dd443c33a9fc91cb@ec2-3-219-229-143.compute-1.amazonaws.com:5432/d1lo1qphpmd86q";
             var databaseUri = new Uri(connectionUrl);
             string db = databaseUri.LocalPath.TrimStart('/');
             string[] userInfo = databaseUri.UserInfo.Split(':', StringSplitOptions.RemoveEmptyEntries);

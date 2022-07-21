@@ -20,7 +20,10 @@ namespace ElectronicComponentsShop.DTOs
             Score = review.Score;
             Content = review.Content;
             CreatedAt = review.CreatedAt;
-            UserName = review.User.LastName + " " + review.User.FirstName;
+            if (review.User == null)
+                UserName = "Ẩn danh";
+            else
+                UserName = review.User.LastName + " " + review.User.FirstName;
         }
     }
 }
