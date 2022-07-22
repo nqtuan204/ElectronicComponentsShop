@@ -1,0 +1,56 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model int
+<!-- Review Form -->
+<div class="col-md-3">
+    <div id="review-form">
+        <div class="review-form">
+            <!--<input class="input" type="text" placeholder="">
+            <input class="input" type="email" placeholder="Your Email">-->
+            <textarea class="input" id="review-content" name="Content" placeholder="Đánh giá của bạn"></textarea>
+            <div class="input-rating">
+                <span>Chấm điểm: </span>
+                <div class="stars">
+                    <input id="star5" name="Score" value="5" type="radio"><label for="star5"></label>
+                    <input id="star4" name="Score" value="4" type="radio"><label for="star4"></label>
+                    <input id="star3" name="Score" value="3" type="radio"><label for="star3"></label>
+                    <input id="star2" name="Score" value="2" type="radio"><label for="star2"></label>
+                    <input id="star1" name="Score" value="1" type="radio"><label for="star1"></label>
+                </div>
+            </div>
+            <input name="ProductId" hidden value="@Model" />
+            <button class="primary-btn" onclick="postReview('@Model')">Xong</button>
+        </div>
+    </div>
+</div>
+<!-- /Review Form -->
+<script>
+    function postReview(productId) {
+        let content = document.getElementById('review-content');
+        let score = 1;
+        document.getElementsByName('Score').forEach(e => {
+            if (e.checked)
+                score = e;
+        });
+        let newReview = {
+            Score: score.value,
+            Content: content.value,
+            ProductId: productId
+        };
+        console.log(newReview);
+        fetch('/Product/CreateReview', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newReview)
+        }).then(re => {
+            score.checked = false;
+            content.value = null;
+        });
+    }
+</script>

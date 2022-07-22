@@ -148,8 +148,9 @@
                                 <div class="row">
                                     <div id="rating-wrapper"></div>
                                     <div id="reviews-wrapper"></div>
+                                    @Html.Partial("_ReviewForm", Model.Id);
                                 </div>
-                                
+
                                 <div id="paginator-wrapper" class="row"></div>
                             }
                             else

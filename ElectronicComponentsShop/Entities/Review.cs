@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ElectronicComponentsShop.DTOs;
 
 namespace ElectronicComponentsShop.Entities
 {
@@ -15,5 +16,16 @@ namespace ElectronicComponentsShop.Entities
         public User User { get; set; }
         public int ProductId { get; set; }
         public Product Product { get; set; }
+
+        public Review() { }
+
+        public Review(NewReviewDTO dto)
+        {
+            Score = dto.Score;
+            Content = dto.Content;
+            CreatedAt = DateTime.Now;
+            UserId = dto.UserId;
+            ProductId = dto.ProductId;
+        }
     }
 }

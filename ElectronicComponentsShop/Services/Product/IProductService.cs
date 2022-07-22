@@ -19,5 +19,6 @@ namespace ElectronicComponentsShop.Services.Product
         int GetNumOfReviews(int id);
         IEnumerable<ReviewDTO> GetPagedReviews(int id, int page);
         IEnumerable<ProductDTO> GetRelatedProducts(int id, int categoryId);
+        Task CreateReview(NewReviewDTO newReview);
     }
 }

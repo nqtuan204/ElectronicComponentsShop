@@ -8,6 +8,7 @@ using ElectronicComponentsShop.Models;
 using ElectronicComponentsShop.DTOs;
 using ElectronicComponentsShop.Services.Product;
 using ElectronicComponentsShop.Services.Category;
+using ElectronicComponentsShop.Services.Jwt;
 
 namespace ElectronicComponentsShop.Controllers
 {
@@ -15,10 +16,12 @@ namespace ElectronicComponentsShop.Controllers
     {
         private readonly IProductService _productSv;
         private readonly ICategoryService _categorySv;
-        public ProductController(IProductService productSv, ICategoryService categorySv)
+        private readonly IJwtService _jwtSv;
+        public ProductController(IProductService productSv, ICategoryService categorySv, IJwtService jwtSv)
         {
             _productSv = productSv;
             _categorySv = categorySv;
+            _jwtSv = jwtSv;
         }
         // GET: ProductController
         public ActionResult List(int page = 1, int pageSize = 9, string sortBy = null, ProductFilterVM filter = null)
@@ -107,6 +110,28 @@ namespace ElectronicComponentsShop.Controllers
         {
             var relatedProducts = _productSv.GetRelatedProducts(id, categoryId).Select(p => new ProductVM(p));
             return PartialView("_ProductCarousel", new ProductCarouselVM("Sản phẩm cùng danh mục", relatedProducts, 3));
+        }
+        private int? GetUserId()
+        {
+            try
+            {
+                var claims = _jwtSv.GetUserClaims(Request.Cookies["token"]);
+                int userId = int.Parse(claims.First(c => c.Type == "Id").Value);
+                return userId;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> CreateReview([FromBody] NewReviewVM newReview)
+        {
+            var userId = GetUserId();
+            NewReviewDTO dto = new(newReview, userId);
+            await _productSv.CreateReview(dto);
+            return StatusCode(200);
         }
 
         // GET: ProductController/Create

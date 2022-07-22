@@ -143,5 +143,12 @@ namespace ElectronicComponentsShop.Services.Product
             int skip = r.Next(1, products.Count() - 7);
             return products.OrderBy(p => p.Name).Skip(skip).Take(6).Select(p => new ProductDTO(p, avgScore));
         }
+
+        public async Task CreateReview(NewReviewDTO newReview)
+        {
+            Review review = new(newReview);
+            _db.Reviews.Add(review);
+            await _db.SaveChangesAsync();
+        }
     }
 }
