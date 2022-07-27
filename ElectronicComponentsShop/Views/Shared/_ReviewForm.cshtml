@@ -21,36 +21,8 @@
                     <input id="star1" name="Score" value="1" type="radio"><label for="star1"></label>
                 </div>
             </div>
-            <input name="ProductId" hidden value="@Model" />
             <button class="primary-btn" onclick="postReview('@Model')">Xong</button>
         </div>
     </div>
 </div>
 <!-- /Review Form -->
-<script>
-    function postReview(productId) {
-        let content = document.getElementById('review-content');
-        let score = 1;
-        document.getElementsByName('Score').forEach(e => {
-            if (e.checked)
-                score = e;
-        });
-        let newReview = {
-            Score: score.value,
-            Content: content.value,
-            ProductId: productId
-        };
-        console.log(newReview);
-        fetch('/Product/CreateReview', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(newReview)
-        }).then(re => {
-            score.checked = false;
-            content.value = null;
-        });
-    }
-</script>

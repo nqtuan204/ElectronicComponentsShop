@@ -298,3 +298,56 @@ function selectWards() {
     for (let ward of district.wards)
         document.getElementById('Ward').innerHTML += `<option value="${ward.name}">${ward.name}</option>`;
 }
+
+//REVIEW FORM//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function postReview(productId) {
+    let content = document.getElementById('review-content');
+    let score = 1;
+    document.getElementsByName('Score').forEach(e => {
+        if (e.checked)
+            score = e;
+    });
+    let newReview = {
+        Score: score.value,
+        Content: content.value,
+        ProductId: productId
+    };
+    console.log(newReview);
+    fetch('/Product/CreateReview', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newReview)
+    }).then(re => {
+        score.checked = false;
+        content.value = null;
+    });
+}
+
+//USER-PROFILE//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function htmlbodyHeightUpdate() {
+    var height3 = $(window).height()
+    var height1 = $('.nav').height() + 50
+    height2 = $('.main').height()
+    if (height2 > height3) {
+        $('html').height(Math.max(height1, height3, height2) + 10);
+        $('body').height(Math.max(height1, height3, height2) + 10);
+    }
+    else {
+        $('html').height(Math.max(height1, height3, height2));
+        $('body').height(Math.max(height1, height3, height2));
+    }
+
+}
+$(document).ready(function () {
+    htmlbodyHeightUpdate()
+    $(window).resize(function () {
+        htmlbodyHeightUpdate()
+    });
+    $(window).scroll(function () {
+        height2 = $('.main').height()
+        htmlbodyHeightUpdate()
+    });
+});

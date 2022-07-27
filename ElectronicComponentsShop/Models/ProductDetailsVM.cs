@@ -18,7 +18,7 @@ namespace ElectronicComponentsShop.Models
         public int CategoryId { get; set; }
         public string CategoryName { get; set; }
 
-        public ProductDetailsVM(ProductDetailsDTO dto,IEnumerable<string> imageURLs, double averageScore, int numOfReviews)
+        public ProductDetailsVM(ProductDetailsDTO dto, IEnumerable<string> imageURLs, double averageScore, int numOfReviews)
         {
             Id = dto.Id;
             Name = dto.Name;
@@ -28,6 +28,22 @@ namespace ElectronicComponentsShop.Models
             NumOfReviews = numOfReviews;
             CategoryId = dto.CategoryId;
             CategoryName = dto.CategoryName;
+            Price = GetFormattedPrice(dto.Price);
+        }
+
+        private string GetFormattedPrice(decimal? price)
+        {
+            if (price == null || price == 0)
+                return "Liên hệ";
+            string priceString = ((long)price).ToString();
+            int selectedNumbers = 0;
+            while (priceString.Length - (selectedNumbers + 3) >= 1)
+            {
+                selectedNumbers += 3;
+                priceString = priceString.Insert(priceString.Length - selectedNumbers, ".");
+                selectedNumbers++;
+            }
+            return priceString + "đ";
         }
     }
 }

@@ -1,72 +1,162 @@
-﻿<div class="container">
-    <div class="row">
-        <h1>Ipsum</h1>
-        <div role="tabpanel">
-            <div class="col-sm-3">
-                <ul class="nav nav-pills brand-pills nav-stacked" role="tablist">
-                    <li role="presentation" class="brand-nav active"><a href="#tab1" aria-controls="tab1" role="tab" data-toggle="tab">Lorem ipsum</a></li>
-                    <li role="presentation" class="brand-nav"><a href="#tab2" aria-controls="tab2" role="tab" data-toggle="tab">Zombie ipsum</a></li>
-                    <li role="presentation" class="brand-nav"><a href="#tab3" aria-controls="tab3" role="tab" data-toggle="tab">Gansta ipsum</a></li>
-                    <li role="presentation" class="brand-nav"><a href="#tab4" aria-controls="tab4" role="tab" data-toggle="tab">Corporate ipsum</a></li>
-                </ul>
-            </div>
-            <div class="col-sm-9">
-                <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane active" id="tab1">
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris tincidunt feugiat lorem, at ornare tellus faucibus ut.
-                            Curabitur eget metus dapibus nibh laoreet lacinia eget id metus. Mauris quis convallis elit, ac convallis augue.
-                            Pellentesque ornare cursus nibh quis fermentum. Morbi faucibus at tortor sed volutpat. Etiam at ex molestie turpis aliquam auctor.
-                            Nulla consequat tristique augue, vel venenatis massa fringilla sit amet. Morbi egestas turpis facilisis sem faucibus finibus.
-                        </p>
-                        <p>
-                            Nam sodales magna eget nulla interdum gravida. Aenean cursus magna vel lorem eleifend, vel eleifend massa rhoncus.
-                            Duis accumsan vehicula ultricies. Proin tincidunt blandit congue. Curabitur semper odio ut malesuada dapibus.
-                        </p>
-                    </div>
-                    <div role="tabpanel" class="tab-pane" id="tab2">
-                        <p>
-                            Zombie ipsum reversus ab viral inferno, nam rick grimes malum cerebro. De carne lumbering animata corpora quaeritis.
-                            Summus brains sit, morbo vel maleficia? De apocalypsi gorger omero undead survivor dictum mauris.
-                            Hi mindless mortuis soulless creaturas, imo evil stalking monstra adventus resi dentevil vultus comedat cerebella viventium.
-                            Qui animated corpse, cricket bat max brucks terribilem incessu zomby.
-                        </p>
-                        <p>
-                            The voodoo sacerdos flesh eater, suscitat mortuos comedere
-                            carnem virus. Zonbi tattered for solum oculi eorum defunctis go lum cerebro. Nescio brains an Undead zombies.
-                            Sicut malus putrid voodoo horror. Nigh tofth eliv ingdead.
-                        </p>
-                    </div>
-                    <div role="tabpanel" class="tab-pane" id="tab3">
-                        <p>
-                            Lorem ipsizzle dolor away amizzle, consectetuer pizzle elizzle. Nullizzle yo velizzle, check it out volutpizzle, quis, gravida vel, yo.
-                            Ma nizzle eget tortor. Sizzle eros. My shizz izzle dolizzle gizzle turpis tempizzle fo shizzle mah nizzle fo rizzle, mah home g-dizzle.
-                            Maurizzle pellentesque nibh izzle own yo'. Check it out in tortor. Pellentesque fizzle rhoncizzle nisi.
-                        </p>
-                        <p>
-                            In hac habitasse platea dictumst. Shizzlin dizzle dapibus. You son of a bizzle tellizzle urna, pretizzle fo shizzle mah nizzle fo rizzle, mah home g-dizzle,
-                            ghetto ac, check it out vitae, nunc. Shizzlin dizzle suscipizzle. Integizzle sempizzle velit sizzle dizzle.
-                        </p>
-                    </div>
-                    <div role="tabpanel" class="tab-pane" id="tab4">
-                        <p>
-                            Collaboratively administrate empowered markets via plug-and-play networks.
-                            Dynamically procrastinate B2C users after installed base benefits. Dramatically visualize customer directed convergence without
-                            revolutionary ROI.
-                        </p>
-                        <p>
-                            Efficiently unleash cross-media information without cross-media value.
-                            Quickly maximize timely deliverables for real-time schemas. Dramatically maintain clicks-and-mortar
-                            solutions without functional solutions.
-                        </p>
-                        <p>
-                            Completely synergize resource sucking relationships via premier niche markets. Professionally cultivate
-                            one-to-one customer service with robust ideas. Dynamically innovate resource-leveling customer service
-                            for state of the art customer service.
-                        </p>
-                    </div>
-                </div>
-            </div>
+﻿<link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+<nav class="navbar navbar-inverse sidebar" role="navigation">
+    <div class="container-fluid">
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="#">Thông tin tài khoản</a></li>
+                <li><a href="#">Đổi mật khẩu</a></li>
+                <li><a href="#">Quản lý đơn hàng</a></li>
+                <li><a href="#">Sản phẩm yêu thích</a></li>
+            </ul>
         </div>
     </div>
+</nav>
+<div class="main" id="user-profile-content">
+    
 </div>
+
+<style>
+    body, html {
+        height: 100%;
+    }
+
+    /* remove outer padding */
+    .main .row {
+        padding: 0px;
+        margin: 0px;
+    }
+
+    /*Remove rounded coners*/
+
+    nav.sidebar.navbar {
+        border-radius: 0px;
+    }
+
+    nav.sidebar, .main {
+        -webkit-transition: margin 200ms ease-out;
+        -moz-transition: margin 200ms ease-out;
+        -o-transition: margin 200ms ease-out;
+        transition: margin 200ms ease-out;
+    }
+
+    /* Add gap to nav and right windows.*/
+    .main {
+        padding: 10px 10px 0 10px;
+    }
+
+    /* .....NavBar: Icon only with coloring/layout.....*/
+
+    /*small/medium side display*/
+    @@media (min-width: 768px) {
+        /*Allow main to be next to Nav*/
+        .main {
+            position: absolute;
+            width: calc(100% - 40px); /*keeps 100% minus nav size*/
+            margin-left: 40px;
+            float: right;
+        }
+        /*lets nav bar to be showed on mouseover*/
+        nav.sidebar:hover + .main {
+            margin-left: 200px;
+        }
+        /*Center Brand*/
+        nav.sidebar.navbar.sidebar > .container .navbar-brand, .navbar > .container-fluid .navbar-brand {
+            margin-left: 0px;
+        }
+        /*Center Brand*/
+        nav.sidebar .navbar-brand, nav.sidebar .navbar-header {
+            text-align: center;
+            width: 100%;
+            margin-left: 0px;
+        }
+        /*Center Icons*/
+        nav.sidebar a {
+            padding-right: 13px;
+        }
+        /*adds border top to first nav box */
+        nav.sidebar .navbar-nav > li:first-child {
+            border-top: 1px #e5e5e5 solid;
+        }
+        /*adds border to bottom nav boxes*/
+        nav.sidebar .navbar-nav > li {
+            border-bottom: 1px #e5e5e5 solid;
+        }
+        /* Colors/style dropdown box*/
+        nav.sidebar .navbar-nav .open .dropdown-menu {
+            position: static;
+            float: none;
+            width: auto;
+            margin-top: 0;
+            background-color: transparent;
+            border: 0;
+            -webkit-box-shadow: none;
+            box-shadow: none;
+        }
+        /*allows nav box to use 100% width*/
+        nav.sidebar .navbar-collapse, nav.sidebar .container-fluid {
+            padding: 0 0px 0 0px;
+        }
+        /*colors dropdown box text */
+        .navbar-inverse .navbar-nav .open .dropdown-menu > li > a {
+            color: #777;
+        }
+        /*gives sidebar width/height*/
+        nav.sidebar {
+            width: 200px;
+            height: 100%;
+            margin-left: -160px;
+            float: left;
+            z-index: 8000;
+            margin-bottom: 0px;
+        }
+            /*give sidebar 100% width;*/
+            nav.sidebar li {
+                width: 100%;
+            }
+            /* Move nav to full on mouse over*/
+            nav.sidebar:hover {
+                margin-left: 0px;
+            }
+        /*for hiden things when navbar hidden*/
+        .forAnimate {
+            opacity: 0;
+        }
+    }
+
+    /* .....NavBar: Fully showing nav bar..... */
+
+    @@media (min-width: 1330px) {
+        /*Allow main to be next to Nav*/
+        .main {
+            width: calc(100% - 200px); /*keeps 100% minus nav size*/
+            margin-left: 200px;
+        }
+        /*Show all nav*/
+        nav.sidebar {
+            margin-left: 0px;
+            float: left;
+        }
+            /*Show hidden items on nav*/
+            nav.sidebar .forAnimate {
+                opacity: 1;
+            }
+    }
+
+    nav.sidebar .navbar-nav .open .dropdown-menu > li > a:hover, nav.sidebar .navbar-nav .open .dropdown-menu > li > a:focus {
+        color: #CCC;
+        background-color: transparent;
+    }
+
+    nav:hover .forAnimate {
+        opacity: 1;
+    }
+
+    section {
+        padding-left: 15px;
+    }
+</style>
