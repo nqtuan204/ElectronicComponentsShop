@@ -217,7 +217,6 @@ namespace ElectronicComponentsShop.Controllers
         public ActionResult ChangePassword(string password, string newPassword)
         {
             var userId = GetUserId();
-            var user = _userSv.GetUserById(userId);
             if (_userSv.IsPasswordMatch(userId, password))
             {
                 _userSv.ChangePassword(userId, newPassword);

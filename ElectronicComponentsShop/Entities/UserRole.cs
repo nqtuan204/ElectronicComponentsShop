@@ -16,5 +16,6 @@ namespace ElectronicComponentsShop.Entities
             UserId = userId;
             RoleId = roleId;
         }
+
     }
 }

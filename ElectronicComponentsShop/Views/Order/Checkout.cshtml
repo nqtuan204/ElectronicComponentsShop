@@ -37,16 +37,16 @@
                             <span asp-validation-for="Address" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <select class="form-control" asp-for="Province" onchange="selectDistricts()" class="custom-select" value="@Model.Province">@Model.Province</select>
-                            <span asp-validation-for="Province" class="text-danger"></span>
+                            <select class="form-control custom-select" asp-for="ProvinceId" onchange="selectDistricts()" value="@Model.ProvinceId">@Model.Province</select>
+                            <span asp-validation-for="ProvinceId" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <select class="form-control" asp-for="District" onchange="selectWards()" value="@Model.District">@Model.District</select>
-                            <span asp-validation-for="District" class="text-danger"></span>
+                            <select class="form-control" asp-for="DistrictId" onchange="selectWards()" value="@Model.DistrictId">@Model.District</select>
+                            <span asp-validation-for="DistrictId" class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <select class="form-control" asp-for="Ward" value="@Model.Ward">@Model.Ward</select>
-                            <span asp-validation-for="Ward" class="text-danger"></span>
+                            <select class="form-control" asp-for="WardId" value="@Model.WardId">@Model.Ward</select>
+                            <span asp-validation-for="WardId" class="text-danger"></span>
                         </div>
                     </div>
                     <!-- /Billing Details -->
@@ -76,7 +76,7 @@
                                     i++;
                                     <div class="order-col">
                                         <div>@(item.Quantity)x @(item.ProductName)</div>
-                                        <div>@(item.TotalPrice)</div>
+                                        <div>@(item.TotalPrice)đ</div>
                                     </div>
                                     <input name="Items[@i].ProductId" type="number" value="@item.ProductId" hidden />
                                     <input name="Items[@i].Quantity" type="number" value="@item.Quantity" hidden />
@@ -93,27 +93,28 @@
                         </div>
                         <div class="order-col">
                             <div><strong>Tổng cộng</strong></div>
-                            <div><strong class="order-total">@Model.Amount</strong></div>
+                            <div><strong class="order-total">@(Model.Amount)đ</strong></div>
                         </div>
                     </div>
                     <div class="payment-method">
-                        @foreach (var key in Model.PaymentTypes.Keys)
+                        @foreach (var paymentType in Model.PaymentTypes)
                         {
                             <div class="input-radio">
-                                <input type="radio" asp-for="payment" id="payment-@key" value="@key">
-                                <label for="payment-@key">
+                                <input type="radio" asp-for="PaymentTypeId" id="payment-@paymentType.Id" value="@paymentType.Id">
+                                <label for="payment-@paymentType.Id">
                                     <span></span>
-                                    COD
+                                    @paymentType.Name;
                                 </label>
                                 <div class="caption">
                                     <p>Thanh toán khi nhận hàng.</p>
                                 </div>
                             </div>
-                            <span asp-validation-for="payment" class="text-danger"></span>
+                            <span asp-validation-for="PaymentTypeId" class="text-danger"></span>
                         }
                     </div>
+
                     <div class="input-checkbox">
-                        <button type="submit" class="primary-btn order-submit" style="width:100%">Xác nhận đặt hàng</button>
+                        <button type="submit" class="primary-btn order-submit" style="width:100%" onclick="window.sessionStorage.removeItem('items')">Xác nhận đặt hàng</button>
                     </div>
                     <!-- /Order Details -->
                 </div>
@@ -122,10 +123,10 @@
             <!-- /container -->
         </div>
     </div>
-        <!-- /SECTION -->
+    <!-- /SECTION -->
 </form>
 
 
 <script>
-    
+
 </script>

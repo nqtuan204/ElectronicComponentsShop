@@ -12,18 +12,20 @@ namespace ElectronicComponentsShop.Database
     {
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<District> Districts { get; set; }
         public DbSet<Favourite> Favourites { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<OrderState> OrderStates { get; set; }
-        public DbSet<Payment> Payments { get; set; }
         public DbSet<PaymentType> PaymentTypes { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
+        public DbSet<Province> Provinces { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
+        public DbSet<Ward> Wards { get; set; }
 
         public ECSDbContext(DbContextOptions options) : base(options)
         {
@@ -48,6 +50,13 @@ namespace ElectronicComponentsShop.Database
                 action.Property(category => category.ThumbnailURL).HasMaxLength(500);
             });
 
+            builder.Entity<District>(action =>
+            {
+                action.HasKey(d => d.Id);
+                action.Property(d => d.Id).ValueGeneratedOnAdd();
+                action.HasOne(d => d.Province).WithMany(p => p.Districts).HasForeignKey(d => d.ProvinceId);
+            });
+
             builder.Entity<Favourite>(action =>
             {
                 action.HasKey(fav => new { fav.ProductId, fav.UserId });
@@ -62,11 +71,13 @@ namespace ElectronicComponentsShop.Database
                 action.HasOne(order => order.OrderState).WithMany(orderState => orderState.Orders).HasForeignKey(order => order.OrderStateId);
                 action.HasOne(order => order.User).WithMany(user => user.Orders).HasForeignKey(order => order.UserId);
                 action.Property(order => order.Address).HasMaxLength(200).IsRequired();
-                action.Property(order => order.Province).HasMaxLength(50).IsRequired();
-                action.Property(order => order.District).HasMaxLength(50).IsRequired();
-                action.Property(order => order.Ward).HasMaxLength(50).IsRequired();
+                action.HasOne(order => order.Province).WithMany(p => p.Orders).HasForeignKey(order => order.ProvinceId);
+                action.HasOne(order => order.District).WithMany(d => d.Orders).HasForeignKey(order => order.DistrictId);
+                action.HasOne(order => order.Ward).WithMany(w => w.Orders).HasForeignKey(order => order.WardId);
                 action.Property(order => order.Note).HasMaxLength(500);
                 action.HasOne(order => order.PaymentType).WithMany(paymentType => paymentType.Orders).HasForeignKey(order => order.PaymentTypeId);
+                action.Property(order => order.PaymentTypeId).HasDefaultValue<int>(1);
+                action.Property(order => order.OrderStateId).HasDefaultValue<int>(1);
             });
 
             builder.Entity<OrderItem>(action =>
@@ -82,14 +93,6 @@ namespace ElectronicComponentsShop.Database
                 action.Property(state => state.Id).ValueGeneratedOnAdd();
                 action.Property(state => state.Name).HasMaxLength(30).IsRequired();
                 action.Property(state => state.Description).HasMaxLength(500);
-            });
-
-            builder.Entity<Payment>(action =>
-            {
-                action.HasKey(payment => payment.Id);
-                action.Property(payment => payment.Id).ValueGeneratedOnAdd();
-                action.HasOne(payment => payment.Order).WithOne(order => order.Payment);
-                action.HasOne(payment => payment.PaymentType).WithMany(paymentType => paymentType.Payments).HasForeignKey(payment => payment.PaymentTypeId);
             });
 
             builder.Entity<PaymentType>(action =>
@@ -115,6 +118,12 @@ namespace ElectronicComponentsShop.Database
                 action.HasOne(image => image.Product).WithMany(product => product.Images).HasForeignKey(image => image.ProductId);
                 action.Property(image => image.Id).ValueGeneratedOnAdd();
                 action.Property(image => image.URL).HasMaxLength(500).IsRequired();
+            });
+
+            builder.Entity<Province>(action =>
+            {
+                action.HasKey(p => p.Id);
+                action.Property(p => p.Id).ValueGeneratedOnAdd();
             });
 
             builder.Entity<Review>(action =>
@@ -150,6 +159,13 @@ namespace ElectronicComponentsShop.Database
                 action.HasKey(userRole => new { userRole.UserId, userRole.RoleId });
                 action.HasOne(userRole => userRole.User).WithMany(user => user.UserRoles).HasForeignKey(userRole => userRole.UserId);
                 action.HasOne(userRole => userRole.Role).WithMany(role => role.UserRoles).HasForeignKey(userRole => userRole.RoleId);
+            });
+
+            builder.Entity<Ward>(action =>
+            {
+                action.HasKey(w => w.Id);
+                action.Property(w => w.Id).ValueGeneratedOnAdd();
+                action.HasOne(w => w.District).WithMany(d => d.Wards).HasForeignKey(w => w.DistrictId);
             });
         }
     }

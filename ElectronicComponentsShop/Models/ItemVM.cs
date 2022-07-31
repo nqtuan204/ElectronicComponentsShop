@@ -40,7 +40,7 @@ namespace ElectronicComponentsShop.Models
                 priceString = priceString.Insert(priceString.Length - selectedNumbers, ".");
                 selectedNumbers++;
             }
-            return priceString + "đ";
+            return priceString;
         }
 
     }

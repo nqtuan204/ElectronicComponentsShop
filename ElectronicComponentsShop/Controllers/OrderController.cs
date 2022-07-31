@@ -45,7 +45,7 @@ namespace ElectronicComponentsShop.Controllers
             var user = _userSv.GetUserById(userId);
             var paymentTypes = _orderSv.GetAllPaymentTypes();
             var items = await _cartSv.GetItems(userId);
-            if (items.Count() == 0)
+            if (!items.Any())
                 return Redirect("/Cart");
             decimal amount = items.Sum(item => item.Quantity * item.Price);
             var vm = new CheckoutVM(user, items.Select(i => new ItemVM(i)), paymentTypes, amount);
@@ -63,6 +63,13 @@ namespace ElectronicComponentsShop.Controllers
             await _orderSv.CreateOrder(newOrder);
             await _cartSv.Clear(userId);
             return Redirect("/");
+        }
+
+        public ActionResult GetUserOrdersPartial([FromQuery] int page = 1, [FromQuery] int orderStateId = 0)
+        {
+            var userId = GetUserId();
+            var userOrders = _orderSv.GetUserOrders(userId, page, orderStateId);
+            return PartialView("_UserOrders", userOrders);
         }
         // GET: OrderController/Details/5
         public ActionResult Details(int id)

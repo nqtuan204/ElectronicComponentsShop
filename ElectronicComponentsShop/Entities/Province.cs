@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace ElectronicComponentsShop.Entities
 {
-    public class PaymentType
+    public class Province
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string CreatedAt { get; set; }
+        public IEnumerable<District> Districts { get; set; }
         public IEnumerable<Order> Orders { get; set; }
     }
 }

@@ -24,7 +24,7 @@ namespace ElectronicComponentsShop.Services.User
             var user = new Entities.User(dto);
             await _db.Users.AddAsync(user);
             await _db.SaveChangesAsync();
-            await AddRole(user.Id, 1);
+            await AddRole(user.Id, 2);
         }
         public async Task AddRole(int userId, int roleId)
         {
@@ -55,6 +55,7 @@ namespace ElectronicComponentsShop.Services.User
         public UserDTO GetUserById(int id)
         {
             var user = _db.Users.FirstOrDefault(user => user.Id == id);
+
             if (user != null)
             {
                 var roles = _db.UserRoles.Include(ur => ur.Role).Where(ur => ur.UserId == user.Id).Select(ur => ur.Role.Name);

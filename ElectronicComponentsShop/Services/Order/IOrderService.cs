@@ -8,7 +8,8 @@ namespace ElectronicComponentsShop.Services.Order
 {
     public interface IOrderService
     {
-        Dictionary<int, string> GetAllPaymentTypes();
+        IEnumerable<PaymentTypeDTO> GetAllPaymentTypes();
         Task CreateOrder(NewOrderDTO order);
+        IEnumerable<UserOrderDTO> GetUserOrders(int userId, int page, int orderStateId);
     }
 }

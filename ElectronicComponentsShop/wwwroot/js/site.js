@@ -275,28 +275,27 @@ function addToFavList(productId) {
 var locals = [];
 fetch('/local.json').then(re => re.json()).then(data => {
     locals = data;
-    document.getElementById('Province').innerHTML = '<option value="" disabled selected>Tỉnh/thành phố</option>';
-    document.getElementById('District').innerHTML = '<option value="" disabled selected>Quận/huyện</option>';
-    document.getElementById('Ward').innerHTML = '<option value="" disabled selected>Phường/xã</option>';
+    document.getElementById('ProvinceId').innerHTML = '<option value="" disabled selected>Tỉnh/thành phố</option>';
+    document.getElementById('DistrictId').innerHTML = '<option value="" disabled selected>Quận/huyện</option>';
+    document.getElementById('WardId').innerHTML = '<option value="" disabled selected>Phường/xã</option>';
     for (let province of locals)
-        document.getElementById('Province').innerHTML += `<option value="${province.name}">${province.name}</option>`
-
+        document.getElementById('ProvinceId').innerHTML += `<option value="${province.id}">${province.name}</option>`
 });
 
 function selectDistricts() {
-    document.getElementById('District').innerHTML = '<option value="" disabled selected>Quận/huyện</option>';
-    document.getElementById('Ward').innerHTML = '<option value="" disabled selected>Phường/xã</option>';
-    let province = locals.filter(p => p.name == document.getElementById('Province').value)[0];
+    document.getElementById('DistrictId').innerHTML = '<option value="" disabled selected>Quận/huyện</option>';
+    document.getElementById('WardId').innerHTML = '<option value="" disabled selected>Phường/xã</option>';
+    let province = locals.filter(p => p.id == document.getElementById('ProvinceId').value)[0];
     for (let district of province.districts)
-        document.getElementById('District').innerHTML += `<option value="${district.name}">${district.name}</option>`;
+        document.getElementById('DistrictId').innerHTML += `<option value="${district.id}">${district.name}</option>`;
 }
 
 function selectWards() {
-    document.getElementById('Ward').innerHTML = '<option value="" disabled selected>Phường/xã</option>';
-    let province = locals.filter(p => p.name == document.getElementById('Province').value)[0];
-    let district = province.districts.filter(d => d.name == document.getElementById('District').value)[0];
+    document.getElementById('WardId').innerHTML = '<option value="" disabled selected>Phường/xã</option>';
+    let province = locals.filter(p => p.id == document.getElementById('ProvinceId').value)[0];
+    let district = province.districts.filter(d => d.id == document.getElementById('DistrictId').value)[0];
     for (let ward of district.wards)
-        document.getElementById('Ward').innerHTML += `<option value="${ward.name}">${ward.name}</option>`;
+        document.getElementById('WardId').innerHTML += `<option value="${ward.id}">${ward.name}</option>`;
 }
 
 //REVIEW FORM//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -339,7 +338,6 @@ function htmlbodyHeightUpdate() {
         $('html').height(Math.max(height1, height3, height2));
         $('body').height(Math.max(height1, height3, height2));
     }
-
 }
 $(document).ready(function () {
     htmlbodyHeightUpdate()
@@ -353,9 +351,16 @@ $(document).ready(function () {
 });
 
 async function getUserInfo() {
-    let userProfile = document.getElementById('user-profile-content');
-    if (userProfile != null)
-        userProfile.innerHTML = await fetch('/User/GetUserInfoPartial').then(re => re.text()).then(text => text);
+    let main = document.getElementById('user-profile-content');
+    if (main != null)
+        main.innerHTML = await fetch('/User/GetUserInfoPartial').then(re => re.text()).then(text => text);
+}
+
+async function GetUserOrders(page, orderStateId) {
+    console.log(`Trang ${page} - trạng thái ${orderStateId}`);
+    let main = document.getElementById('user-profile-content');
+    if (main != null)
+        main.innerHTML = await fetch(`/Order/GetUserOrdersPartial?page=${page}&orderStateId=${orderStateId}`).then(re => re.text()).then(text => text);
 }
 
 getUserInfo();

@@ -1,0 +1,50 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    var Orders = Model.ToList();
+    var page = Orders.Count / 5;
+}
+@using ElectronicComponentsShop.DTOs;
+@model IEnumerable<UserOrderDTO>
+<div style="display:flex">
+    <a onclick="GetUserOrders(1,0)" style="width:25%;">Tất cả</a>
+    <a onclick="GetUserOrders(1,1)" style="width:25%;">Chờ xử lý</a>
+    <a onclick="GetUserOrders(1,2)" style="width:25%;">Đã hủy</a>
+    <a onclick="GetUserOrders(1,3)" style="width:25%;">Đang giao</a>
+    <a onclick="GetUserOrders(1,4)" style="width:25%;">Đã giao</a>
+
+</div>
+<table class="table">
+    <thead>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Orders.Count; i++)
+        {
+            <tr style="border:0.5px;">
+                <td>@(i+1)</td>
+                <td style="display:flex; flex-direction:column;">
+                    @foreach (var item in Orders[i].Items)
+                    {
+                        <div style="display:flex;">
+                            <a href="@item.ProductURL" title="@item.ProductName">
+                                <img src="@item.ProductThumbnailURL" style="width:100px;" />
+                            </a>
+                            <span>@item.Quantity x @item.Price.ToString("0,0").Replace(',', '.')đ</span>
+                        </div>
+                    }
+                </td>
+
+                <td style="font-size:16px;">
+                    <strong>
+                        Tổng cộng:
+                        <text style="color:red">@Orders[i].Items.Sum(i => i.Price).ToString("0,0").Replace(',', '.')đ</text>
+                    </strong>
+                </td>
+                <td>Ngày tạo: @Orders[i].CreatedAt</td>
+                <td>Cập nhật lần cuối: @(Orders[i].ModifiedAt.HasValue?Orders[i].ModifiedAt: "Chưa cập nhật")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<a onclick="GetUserOrders('@(page+1)',0)">Xem thêm</a>

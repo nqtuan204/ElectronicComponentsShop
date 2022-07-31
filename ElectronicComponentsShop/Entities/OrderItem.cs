@@ -11,13 +11,15 @@ namespace ElectronicComponentsShop.Entities
         public Order Order { get; set; }
         public int ProductId { get; set; }
         public Product Product { get; set; }
+        public decimal Price { get; set; }
         public int Quantity { get; set; }
 
-        public OrderItem(int orderId,int productId, int quantity)
+        public OrderItem(int orderId, int productId, int quantity, decimal price)
         {
             OrderId = orderId;
             ProductId = productId;
             Quantity = quantity;
+            Price = price;
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ElectronicComponentsShop.Entities;
+using ElectronicComponentsShop.Models;
 
 namespace ElectronicComponentsShop.DTOs
 {
@@ -34,6 +35,13 @@ namespace ElectronicComponentsShop.DTOs
             ProductThumbnailURL = item.Product.ThumbnailURL;
             Price = item.Product.Price;
             Quantity = item.Quantity;
+        }
+        public ItemDTO(ItemVM vm)
+        {
+            ProductId = vm.ProductId;
+            Price = decimal.Parse(vm.Price.Replace(".", ""));
+            Quantity = vm.Quantity;
+
         }
     }
 }
