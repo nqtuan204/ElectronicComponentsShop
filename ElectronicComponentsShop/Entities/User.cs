@@ -33,7 +33,15 @@ namespace ElectronicComponentsShop.Entities
             FirstName = dto.FirstName;
             LastName = dto.LastName;
             CreatedAt = DateTime.Now;
+        }
 
+        public User(UserDTO dto)
+        {
+            PhoneNumber = dto.PhoneNumber;
+            Email = dto.Email;
+            FirstName = dto.FirstName;
+            LastName = dto.LastName;
+            Id = dto.Id;
         }
     }
 }

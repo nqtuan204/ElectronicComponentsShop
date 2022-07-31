@@ -3,21 +3,23 @@
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <!------ Include the above in your HEAD tag ---------->
 
-<nav class="navbar navbar-inverse sidebar" role="navigation">
-    <div class="container-fluid">
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-                <li><a href="#">Thông tin tài khoản</a></li>
-                <li><a href="#">Đổi mật khẩu</a></li>
-                <li><a href="#">Quản lý đơn hàng</a></li>
-                <li><a href="#">Sản phẩm yêu thích</a></li>
-            </ul>
+<div class="container" style="display: flex;">
+    <nav class="navbar navbar-inverse sidebar" role="navigation">
+        <div class="container-fluid">
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a href="#" onclick="getUserInfo()">Thông tin tài khoản</a></li>
+                    <li><a href="#">Đổi mật khẩu</a></li>
+                    <li><a href="#">Quản lý đơn hàng</a></li>
+                    <li><a href="#">Sản phẩm yêu thích</a></li>
+                </ul>
+            </div>
         </div>
+    </nav>
+    <div id="user-profile-content">
+
     </div>
-</nav>
-<div class="main" id="user-profile-content">
-    
 </div>
 
 <style>

@@ -20,11 +20,11 @@ function formattedPrice(price) {
 }
 
 function cartItemquantity(items) {
-    return items.map(item => parseInt(item.quantity)).reduce((sum = 0, quantity) => sum + quantity,0);
+    return items.map(item => parseInt(item.quantity)).reduce((sum = 0, quantity) => sum + quantity, 0);
 }
 
 function cartAmount(items) {
-    return formattedPrice(items.map(item => parseInt(item.quantity) * parseInt(item.price)).reduce((sum, el) => sum + el,0));
+    return formattedPrice(items.map(item => parseInt(item.quantity) * parseInt(item.price)).reduce((sum, el) => sum + el, 0));
 }
 
 async function getCartItems() {
@@ -41,8 +41,8 @@ async function getCartItems() {
 };
 
 function renderSummaryCartItem(item) {
-    let template = 
-    `<div class="product-widget" id="summary-cart-item-${item.productId}">
+    let template =
+        `<div class="product-widget" id="summary-cart-item-${item.productId}">
         <div class="product-img">
             <img src="${item.productThumbnailURL}" alt="" />
         </div>
@@ -58,7 +58,7 @@ function renderSummaryCartItem(item) {
 function renderSummaryCartItems(items) {
     let list = '';
     for (let item of items)
-        list+= renderSummaryCartItem(item);
+        list += renderSummaryCartItem(item);
     return list;
 }
 
@@ -69,7 +69,7 @@ function updateSummaryCartQuantity(items) {
         document.getElementById('cart-item-quantity').innerHTML = cartItemquantity(items);
 }
 
-function renderSummaryCart(items){
+function renderSummaryCart(items) {
     let cart = document.getElementsByClassName('cart-dropdown')[0];
     if (items.length == 0) {
         updateSummaryCartQuantity(items);
@@ -78,7 +78,7 @@ function renderSummaryCart(items){
     else {
         updateSummaryCartQuantity(items);
         cart.innerHTML =
-        `<div class="cart-list" id="cart-item-list">
+            `<div class="cart-list" id="cart-item-list">
             ${renderSummaryCartItems(items)}
         </div>
         <div class="cart-summary">
@@ -123,8 +123,8 @@ function addToCart(productId, quantity) {
 //FULL CART//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function renderFullCartItem(item) {
-    let template = 
-    `<div class="row" id="full-cart-item-${item.productId}">
+    let template =
+        `<div class="row" id="full-cart-item-${item.productId}">
         <div class="col-xs-2">
             <img class="img-responsive" src="${item.productThumbnailURL}">
         </div>
@@ -152,7 +152,7 @@ function renderFullCartItem(item) {
 function renderFullCartItems(items) {
     if (items.length == 0)
         return '';
-    return items.reduce((template, item) => template + renderFullCartItem(item),'');
+    return items.reduce((template, item) => template + renderFullCartItem(item), '');
 }
 
 function renderFullCart(items) {
@@ -177,7 +177,7 @@ function updateFullCartAmount() {
         document.getElementById('full-cart-footer').innerHTML = '';
     else {
         document.getElementById('full-cart-footer').innerHTML =
-        `<div class="row text-center">
+            `<div class="row text-center">
             <div class="col-xs-9">
                 <h4 class="text-right">Tổng cộng <strong>${cartAmount(temp_items)}</strong></h4>
             </div>
@@ -235,7 +235,7 @@ async function getFavList() {
     let favProductIds = JSON.parse(window.sessionStorage.getItem('favProductIds'));
     if (favProductIds != null) {
         document.getElementById('wish-list').innerHTML = favProductIds.length;
-        window.sessionStorage.setItem('favProductIds', JSON.stringify(favProductIds));        
+        window.sessionStorage.setItem('favProductIds', JSON.stringify(favProductIds));
     }
     else {
         favProductIds = await fetch(`/User/GetFavouriteProductIds`).then(re => re.json()).then(data => data).catch(er => null);
@@ -351,3 +351,11 @@ $(document).ready(function () {
         htmlbodyHeightUpdate()
     });
 });
+
+async function getUserInfo() {
+    let userProfile = document.getElementById('user-profile-content');
+    if (userProfile != null)
+        userProfile.innerHTML = await fetch('/User/GetUserInfoPartial').then(re => re.text()).then(text => text);
+}
+
+getUserInfo();

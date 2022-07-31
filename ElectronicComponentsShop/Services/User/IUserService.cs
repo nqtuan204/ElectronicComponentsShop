@@ -20,10 +20,12 @@ namespace ElectronicComponentsShop.Services.User
         UserDTO GetUserByResetPasswordToken(string resetPasswordToken);
         Task AddToFavourites(int userId, int productId);
         int GetNumOfFavourites(int userId);
-        IEnumerable<int> GetFavProductIds(int userID);
+        IEnumerable<ProductDTO> GetFavProducts(int userId);
         Task RemoveFromFavourites(int userId, int productId);
         Task ChangePassword(int userId, string newPassword);
         Task<string> ResetPassword(int userId);
         Task<string> GenerateResetPasswordToken(int userId);
+        bool IsPasswordMatch(int userId, string password);
+        void Update(UserDTO dto);
     }
 }

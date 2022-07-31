@@ -86,7 +86,7 @@ namespace ElectronicComponentsShop.Services.User
             if (user != null && DateTime.Now < user.ResetPasswordTokenExpireAt)
                 return false;
             return true;
-            
+
         }
 
         public async Task AddToFavourites(int userId, int productId)
@@ -109,10 +109,11 @@ namespace ElectronicComponentsShop.Services.User
             return _db.Favourites.Count(f => f.UserId == userId);
         }
 
-        public IEnumerable<int> GetFavProductIds(int userId)
+        public IEnumerable<ProductDTO> GetFavProducts(int userId)
         {
-            return _db.Favourites.Where(f => f.UserId == userId).Select(f => f.ProductId);
+            return _db.Favourites.Include(f => f.Product).Where(f => f.UserId == userId).Select(f => new ProductDTO(f.Product, 0));
         }
+
 
         public async Task ChangePassword(int userId, string newPassword)
         {
@@ -120,7 +121,7 @@ namespace ElectronicComponentsShop.Services.User
             user.Password = newPassword;
             _db.Users.Update(user);
             await _db.SaveChangesAsync();
-        }    
+        }
 
         public async Task<string> ResetPassword(int userId)
         {
@@ -148,6 +149,23 @@ namespace ElectronicComponentsShop.Services.User
             user.ResetPasswordToken = Convert.ToBase64String(crypto.Key);
             await _db.SaveChangesAsync();
             return user.ResetPasswordToken;
+        }
+
+        public bool IsPasswordMatch(int userId, string password)
+        {
+            var user = _db.Users.Find(userId);
+            return (password == user.Password);
+        }
+
+        public void Update(UserDTO dto)
+        {
+            var user = _db.Users.Find(dto.Id);
+            user.PhoneNumber = dto.PhoneNumber;
+            user.Email = dto.Email;
+            user.FirstName = dto.FirstName;
+            user.LastName = dto.LastName;
+            _db.Users.Update(user);
+
         }
     }
 }

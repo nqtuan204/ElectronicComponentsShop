@@ -1,0 +1,30 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@model UserInfoVM
+<div class="container">
+    <form asp-action="UpdateUserInfo" method="post">
+        <div class="row" style="width: 250px; margin: 5px;">
+            <label>Điện thoại:</label>
+            <input class="form-control text-info" value="@Model.PhoneNumber" style="float: right" />
+        </div>
+        <div class="row" style="width: 250px; margin: 5px;">
+            <label>Email:</label>
+            <input class="form-control text-info" value="@Model.Email" style="float: right" />
+        </div>
+        <div class="row" style="width: 250px; margin: 5px;">
+            <label>Họ:</label>
+            <input class="form-control text-info" value="@Model.LastName" style="float: right" />
+        </div>
+        <div class="row" style="width: 250px; margin: 5px;">
+            <label>Tên:</label>
+            <input class="form-control text-info" value="@Model.FirstName" style="float: right" />
+        </div>
+        <div class="row" style="width: 250px; margin: 15px 5px 5px">
+            <input type="submit" class="form-control" value="Cập nhật" style="background: #D10024; border:0px; color:white; float:right; width:250px;">
+        </div>
+    </form>
+</div>

@@ -99,7 +99,8 @@ namespace ElectronicComponentsShop.Controllers
         public async Task<IActionResult> AddToFavourites(int id)
         {
             int userId = GetUserId();
-            if (!_userSv.GetFavProductIds(userId).Contains(id))
+            var favProductIds = _userSv.GetFavProducts(userId).Select(p => p.Id);
+            if (!favProductIds.Contains(id))
                 await _userSv.AddToFavourites(userId, id);
             else
                 await _userSv.RemoveFromFavourites(userId, id);
@@ -111,7 +112,8 @@ namespace ElectronicComponentsShop.Controllers
         public async Task<IActionResult> RemoveFromFavourites(int id)
         {
             int userId = GetUserId();
-            if (_userSv.GetFavProductIds(userId).Contains(id))
+            var favProductIds = _userSv.GetFavProducts(userId).Select(p => p.Id);
+            if (favProductIds.Contains(id))
                 await _userSv.RemoveFromFavourites(userId, id);
             else
                 await _userSv.AddToFavourites(userId, id);
@@ -122,7 +124,16 @@ namespace ElectronicComponentsShop.Controllers
         public ActionResult GetFavouriteProductIds()
         {
             int userId = GetUserId();
-            return Json(_userSv.GetFavProductIds(userId));
+            var favProductIds = _userSv.GetFavProducts(userId).Select(p => p.Id);
+            return Json(favProductIds);
+        }
+
+        [Authorize]
+        public ActionResult GetFavouriteProducts()
+        {
+            int userId = GetUserId();
+            var favProducts = _userSv.GetFavProducts(userId);
+            return Json(favProducts);
         }
 
         [Authorize]
@@ -148,10 +159,9 @@ namespace ElectronicComponentsShop.Controllers
             string title = "[linhkiendientu204] Yêu cầu thiết lập lại mật khẩu";
             string content = $"Ai đó đã yêu cầu thiết lập lại mật khẩu bằng email của bạn, nếu đó là bạn, vui lòng nhấn vào liên kết sau để xác nhận thiết lập lại mật khẩu: " + url;
             _emailSv.Send(title, content, resetPasswordVM.Email);
-            return View("ResetPassword",resetPasswordVM.Email);
+            return View("ResetPassword", resetPasswordVM.Email);
         }
 
-        
         public async Task<ActionResult> ConfirmResetPassword(string token)
         {
             token = Request.QueryString.Value.Replace("?token=", "");
@@ -165,13 +175,55 @@ namespace ElectronicComponentsShop.Controllers
             string content = $"Bạn đã xác nhận thiết lập lại mật khẩu. Mật khẩu mới của bạn là: {newPassword}";
             _emailSv.Send(title, content, user.Email);
             return View("ConfirmResetPassword", user.Email);
-        }    
+        }
 
-        
+
         public IActionResult IsExist(string Email)
         {
             Console.WriteLine("Check if email exist!");
             return Json(_userSv.IsEmailExist(Email));
+        }
+
+        public ActionResult GetUserInfoPartial()
+        {
+            var userId = GetUserId();
+            var userInfo = new UserInfoVM(_userSv.GetUserById(userId));
+            return PartialView("_UserInfo", userInfo);
+        }
+
+        public ActionResult GetChangePasswordPartial()
+        {
+            return new ObjectResult(null);
+        }
+
+        public ActionResult GetUserOrdersPartial()
+        {
+            return new ObjectResult(null);
+        }
+
+        public ActionResult GetFavProducts()
+        {
+            return new ObjectResult(null);
+        }
+
+        public ActionResult UpdateUserInfo(UserDTO dto)
+        {
+            var userId = GetUserId();
+            dto.Id = userId;
+            _userSv.Update(dto);
+            return StatusCode(200);
+        }
+
+        public ActionResult ChangePassword(string password, string newPassword)
+        {
+            var userId = GetUserId();
+            var user = _userSv.GetUserById(userId);
+            if (_userSv.IsPasswordMatch(userId, password))
+            {
+                _userSv.ChangePassword(userId, newPassword);
+                return StatusCode(200);
+            }
+            return StatusCode(404);
         }
 
         // GET: UserController/Create
