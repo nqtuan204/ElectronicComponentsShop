@@ -361,14 +361,15 @@ async function getUserInfo() {
 async function updateUserInfo() {
     let noti = document.getElementById('update-user-info-success');
     noti.hidden = true;
-    let email = document.getElementById('user-email');
-    let phoneNumber = document.getElementById('user-phoneNumber');
-    let firstName = document.getElementById('user-firstName');
-    let lastName = document.getElementById('user-lastName');
+    let email = document.getElementById('user-email').value;
+    let phoneNumber = document.getElementById('user-phoneNumber').value;
+    let firstName = document.getElementById('user-firstName').value;
+    let lastName = document.getElementById('user-lastName').value;
+    console.log(firstName);
     let form = new FormData();
     form.append('email', email);
     form.append('phoneNumber', phoneNumber);
-    form.append('phoneNumber', firstName);
+    form.append('firstName', firstName);
     form.append('lastName', lastName);
     await fetch('/User/UpdateUserInfo', {
         method: 'post',
