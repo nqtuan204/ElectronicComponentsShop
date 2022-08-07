@@ -20,6 +20,7 @@ using ElectronicComponentsShop.Services.Jwt;
 using ElectronicComponentsShop.Services.Cart;
 using ElectronicComponentsShop.Services.Order;
 using ElectronicComponentsShop.Services.Email;
+using ElectronicComponentsShop.Services.Stat;
 
 namespace ElectronicComponentsShop
 {
@@ -55,6 +56,8 @@ namespace ElectronicComponentsShop
             services.AddScoped<ICartService, CartService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IStatService, StatService>();
             services.AddAuthentication("Bearer").AddJwtBearer("Bearer", options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters()
@@ -74,6 +77,10 @@ namespace ElectronicComponentsShop
                 config.AddPolicy("OnlyUser", policyConfig =>
                 {
                     policyConfig.RequireClaim("Role", "Customer");
+                });
+                config.AddPolicy("OnlyAdmin", policyConfig =>
+                {
+                    policyConfig.RequireClaim("Role", "Admin");
                 });
             });
             services.AddMemoryCache();
@@ -114,6 +121,10 @@ namespace ElectronicComponentsShop
                 {
                     response.Cookies.Delete("token");
                     response.Redirect("/User/Login");
+                }
+                if (response.StatusCode == 403)
+                {
+                    response.Redirect("/");
                 }
             });
 

@@ -1,0 +1,47 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model IDictionary<string, decimal>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <script>
+    function getRevenueStatByLocal(from, to) {
+        let form = new FormData();
+        form.append('from', from);
+        form.append('to', to);
+        fetch('/Admin/GetRevenueStatByLocal',{
+            method: 'post',
+            body: form
+        }).then(re => re.json()).then(json => {
+            var chart = new CanvasJS.Chart("chartContainer2", {
+    	    animationEnabled: true,
+    	    theme: "light2", // "light1", "light2", "dark1", "dark2"
+    	    title: {
+    		    text: "Thống kê doanh thu theo địa phương"
+    	    },
+    	    axisY: {
+    		    title: "Doanh thu (VNđ)"
+    	    },
+    	    data: [{
+    		    type: "column",
+                dataPoints: json
+    	    }]
+        });
+        chart.render();
+        });
+    }
+    </script>
+</head>
+<body>
+    <div id="chartContainer2" style="height: 370px; width: 100%;"></div>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+</body>
+</html>                              

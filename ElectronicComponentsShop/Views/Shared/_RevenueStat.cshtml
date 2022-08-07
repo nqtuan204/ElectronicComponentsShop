@@ -1,0 +1,45 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE HTML>
+<html>
+<head>
+    <script>
+        function getRevenueStat(from, to) {
+            let form = new FormData();
+            form.append('from', from);
+            form.append('to',to);
+            fetch('/Admin/GetRevenueStat', {
+                method: 'post',
+                body: form
+            }).then(re => re.json()).then(json => {
+                let chart = new CanvasJS.Chart("chartContainer", {
+                    animationEnabled: true,
+                    title: {
+                        text: "Thống kê doanh thu"
+                    },
+                    axisX: {
+                        valueFormatString: "DD MMM"
+                    },
+                    axisY: {
+                        title: "Doanh thu (VNđ)",
+                        prefix: ""
+                    },
+                    data: [{
+                        type: "spline",
+                        xValueType: "dateTime",
+                        xValueFormatString: "DD MMM Y",
+                        yValueFormatString: "#,###",
+                        dataPoints: json.map(e => { return { x: new Date(e.x).getTime(), y: e.y }})
+                    }]
+                });
+                chart.render();
+            });
+        }
+    </script>
+</head>
+<body>
+    <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+</body>
+</html>                              

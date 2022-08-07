@@ -352,15 +352,160 @@ $(document).ready(function () {
 
 async function getUserInfo() {
     let main = document.getElementById('user-profile-content');
-    if (main != null)
+    if (main != null) {
         main.innerHTML = await fetch('/User/GetUserInfoPartial').then(re => re.text()).then(text => text);
+        selectTab('user-info');
+    }
 }
 
 async function GetUserOrders(page, orderStateId) {
-    console.log(`Trang ${page} - trạng thái ${orderStateId}`);
     let main = document.getElementById('user-profile-content');
-    if (main != null)
+    if (main != null) {
         main.innerHTML = await fetch(`/Order/GetUserOrdersPartial?page=${page}&orderStateId=${orderStateId}`).then(re => re.text()).then(text => text);
+        selectTab('user-orders');
+
+        for (let i = 0; i < 5; i++) {
+            if (document.getElementById(`orderStateId-${i}`).style.color == '#D10024')
+                document.getElementById(`orderStateId-${i}`).style.color = 'black';
+            if (i == parseInt(orderStateId)) {
+                console.log(i);
+                document.getElementById(`orderStateId-${i}`).style.color = '#D10024';
+            }
+        }
+    }
+
+}
+function selectTab(id) {
+    document.getElementById('user-info').style.color = '#CFD8DC';
+    document.getElementById('favourites').style.color = '#CFD8DC';
+    document.getElementById('change-password').style.color = '#CFD8DC';
+    document.getElementById('user-orders').style.color = '#CFD8DC';
+    document.getElementById(id).style.color = '#fff';
+}
+getUserInfo();
+// ADMIN PAGE
+window.onload = function () {
+    let today = new Date();
+    let from = new Date(today.getTime() - 29 * 24 * 3600 * 1000);
+    updateStats(from.toISOString(), today.toISOString());
+}
+async function getQuantityNotifications(from, to) {
+    let form = new FormData();
+    form.append('from', from);
+    form.append('to', to);
+    let container = document.getElementById('quantity-notifications');
+    container.innerHTML = '';
+    let newUsers = await fetch('/Admin/GetQuantityNotificationPartial?title=users', {
+        method: 'post',
+        body: form
+    }).then(re => re.text()).then(text => text);
+    container.innerHTML += newUsers;
+    let newOrders = await fetch('/Admin/GetQuantityNotificationPartial?title=orders', {
+        method: 'post',
+        body: form
+    }).then(re => re.text()).then(text => text);
+    container.innerHTML += newOrders;
+    let completedOrders = await fetch('/Admin/GetQuantityNotificationPartial?title=completed-orders', {
+        method: 'post',
+        body: form
+    }).then(re => re.text()).then(text => text);
+    container.innerHTML += completedOrders;
+    let revenue = await fetch('/Admin/GetQuantityNotificationPartial?title=revenue', {
+        method: 'post',
+        body: form
+    }).then(re => re.text()).then(text => text);
+    container.innerHTML += revenue;
 }
 
-getUserInfo();
+async function getTopStat(from, to) {
+    let container = document.getElementById('top-customers-container');
+    let form = new FormData();
+    form.append('from', from);
+    form.append('to', to);
+    form.append('title', 'users')
+    let topCustomers = await fetch('/Admin/GetTopStatPartial', {
+        method: 'post',
+        body: form
+    }).then(re => re.text()).then(text => text);
+    container.innerHTML = topCustomers;
+    let form2 = new FormData();
+    form2.append('from', from);
+    form2.append('to', to);
+    form2.append('title', 'products')
+    container = document.getElementById('top-products-container');
+    let topProducts = await fetch('/Admin/GetTopStatPartial', {
+        method: 'post',
+        body: form2
+    }).then(re => re.text()).then(text => text);
+    container.innerHTML = topProducts;
+}
+
+async function updateStats(from, to) {
+    getQuantityNotifications(from, to);
+    getTopStat(from, to);
+    getRevenueStat(from, to);
+    getRevenueStatByLocal(from, to);
+    GetCategoriesStat(from, to);
+}
+
+async function updateKeyword(el) {
+    let sortBy = document.getElementById('orderTable-sortBy').innerHTML;
+    let orderStateId = document.getElementById('orderTable-orderStateId').innerHTML;
+    let keyword = el.value;
+    await getOrderTable(sortBy, keyword, orderStateId);
+}
+
+async function updateSort(field) {
+    let keyword = document.getElementById('orderTable-keyword').innerHTML;
+    let orderStateId = document.getElementById('orderTable-orderStateId').innerHTML;
+    let direction = 'desc';
+    let currentSortBy = document.getElementById('orderTable-sortBy').innerHTML;
+    if (currentSortBy.includes(field))
+        direction = currentSortBy.includes('desc') ? 'asc' : 'desc';
+    let sortBy = `${field} ${direction}`;
+    await getOrderTable(sortBy, keyword, orderStateId);
+}
+
+getOrderTable('createdAt desc', '', 1,1);
+
+async function getOrderTable(sortBy, keyword, orderStateId,page) {
+    let form = new FormData();
+    form.append('sortBy', sortBy);
+    form.append('keyword', keyword);
+    form.append('orderStateId', orderStateId);
+    form.append('page', page);
+    let container = document.getElementById('data-table-container');
+    let orderTable = await fetch('/Admin/GetOrderTablePartial', {
+        method: 'post',
+        body: form
+
+    }).then(re => re.text()).then(text => text);
+    container.innerHTML = orderTable;
+}
+
+async function selectOrderState(orderStateId) {
+    let sortBy = document.getElementById('orderTable-sortBy').innerHTML;
+    let keyword = document.getElementById('orderTable-keyword').innerHTML;
+    getOrderTable(sortBy, keyword, orderStateId);
+}
+
+async function changeOrderState(orderId, orderStateId) {
+    console.log('change order state');
+    fetch(`/Admin/ChangeOrderState?orderId=${orderId}&orderStateId=${orderStateId}`).then(re => {
+        let sortBy = document.getElementById('orderTable-sortBy').innerHTML;
+        let keyword = document.getElementById('orderTable-keyword').innerHTML;
+        let orderStateId0 = document.getElementById('orderTable-orderStateId').innerHTML;
+        getOrderTable(sortBy, keyword, orderStateId0);
+    });
+}
+
+async function changePage(page) {
+    let sortBy = document.getElementById('orderTable-sortBy').innerHTML;
+    let keyword = document.getElementById('orderTable-keyword').innerHTML;
+    let orderStateId = document.getElementById('orderTable-orderStateId').innerHTML;
+    await getOrderTable(sortBy, keyword, orderStateId, page);
+}
+
+$('#reportrange').on('apply.daterangepicker', function (ev, picker) {
+    updateStats(new Date(picker.startDate).toISOString(), new Date(picker.endDate).toISOString());
+});

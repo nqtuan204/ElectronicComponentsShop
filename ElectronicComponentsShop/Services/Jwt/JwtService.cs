@@ -56,6 +56,7 @@ namespace ElectronicComponentsShop.Services.Jwt
             };
             foreach (var value in user.Roles)
                 claims.Add(new Claim("Role", value));
+
             return claims;
         }
 

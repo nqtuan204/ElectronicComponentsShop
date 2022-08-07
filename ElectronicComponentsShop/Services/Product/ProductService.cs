@@ -150,5 +150,6 @@ namespace ElectronicComponentsShop.Services.Product
             _db.Reviews.Add(review);
             await _db.SaveChangesAsync();
         }
+
     }
 }

@@ -166,7 +166,11 @@ namespace ElectronicComponentsShop.Services.User
             user.FirstName = dto.FirstName;
             user.LastName = dto.LastName;
             _db.Users.Update(user);
+        }
 
+        public int CountNewUsers(DateTime from, DateTime to)
+        {
+            return _db.Users.Where(u => to >= u.CreatedAt && from <= u.CreatedAt).Count();
         }
     }
 }

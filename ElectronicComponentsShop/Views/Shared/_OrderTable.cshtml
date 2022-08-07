@@ -1,0 +1,165 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    string GetPostfix(string field)
+    {
+        if (ViewBag.sortBy == $"{field} asc")
+            return "&uarr;";
+        if (ViewBag.sortBy == $"{field} desc")
+            return "&darr;";
+        return "";
+    }
+    int total = (int)ViewBag.total;
+    int lastPage = total / 30;
+    int currentPage = (int)ViewBag.page;
+
+}
+@model IList<OrderVM>
+
+<div class="x_panel">
+    <div class="x_title">
+        <h2>Quản lý đơn hàng</h2>
+        <ul class="nav navbar-right panel_toolbox">
+            <li>
+                <a onclick="selectOrderState(0)" class="@(ViewBag.orderStateId==0?"selected-order":"")">Tất cả</a>
+            </li>
+            <li>
+                <a onclick="selectOrderState(1)" class="@(ViewBag.orderStateId==1?"selected-order":"")">Chờ xử lý</a>
+            </li>
+            <li>
+                <a onclick="selectOrderState(3)" class="@(ViewBag.orderStateId==3?"selected-order":"")">Đang giao</a>
+            </li>
+            <li>
+                <a onclick="selectOrderState(2)" class="@(ViewBag.orderStateId==2?"selected-order":"")">Đã hủy</a>
+            </li>
+            <li>
+                <input type="text" class="input" placeholder="Tìm kiếm" oninput="updateKeyword(this)" value="@ViewBag.keyword" />
+            </li>
+        </ul>
+        <div class="clearfix"></div>
+    </div>
+    <div class="x_content">
+        <table id="example" class="table table-striped table-bordered" style="width:100%">
+            <thead>
+                <tr>
+                    <th onclick="updateSort('orderId')">Mã đơn hàng @Html.Raw(GetPostfix("orderId"))</th>
+                    <th onclick="updateSort('createdAt')">Ngày tạo @Html.Raw(@GetPostfix("createdAt"))</th>
+                    <th onclick="updateSort('modifiedAt')">Lần cập nhật cuối @Html.Raw(GetPostfix("modifiedAt"))</th>
+                    <th onclick="updateSort('userId')">Mã khách hàng @Html.Raw(GetPostfix("userId"))</th>
+                    <th onclick="updateSort('orderStateId')">Trạng thái @Html.Raw(GetPostfix("orderStateId"))</th>
+                    <th onclick="updateSort('paymentTypeId')">Hình thức thanh toán @Html.Raw(GetPostfix("paymentTypeId"))</th>
+                    <th>Địa chỉ @Html.Raw(GetPostfix("address"))</th>
+                    <td>Thao tác</td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var row in Model)
+                {
+                    <tr>
+                        <td>@row.Id</td>
+                        <td>@row.CreatedAt</td>
+                        <td>@row.ModifiedAt</td>
+                        <td>@row.UserId</td>
+                        <td>@row.OrderState</td>
+                        <td>@row.PaymentType</td>
+                        <td>@row.Address</td>
+                        <td>
+                            @if (row.OrderState == "Đang giao")
+                            {
+                                <button class="btn" onclick="changeOrderState('@row.Id', 4)">Hoàn thành</button>
+                                <button class="btn" onclick="changeOrderState('@row.Id', 2)">Hủy</button>
+                            }
+                            @if (row.OrderState == "Chờ xử lý")
+                            {
+                                <button class="btn" onclick="changeOrderState('@row.Id', 3)">Giao hàng</button>
+                                <button class="btn" onclick="changeOrderState('@row.Id', 2)">Hủy</button>
+                            }
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div hidden id="orderTable-sortBy">@ViewBag.sortBy</div>
+        <div hidden id="orderTable-keyword">@ViewBag.keyword</div>
+        <div hidden id="orderTable-orderStateId">@ViewBag.orderStateId</div>
+        <div hidden id="total-orders">@ViewBag.total</div>
+
+        @if (lastPage > 1)
+        {
+            <nav aria-label="...">
+                <ul class="pagination">
+                    @if (currentPage == 1)
+                    {
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#">Previous</a>
+                        </li>
+                        <li class="page-item active">
+                            <span class="page-link">
+                                1
+                                <span class="sr-only">(current)</span>
+                            </span>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="page-item">
+                            <a class="page-link" onclick="changePage('@(currentPage-1)')" href="#">Previous</a>
+                        </li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    }
+                    @for (int page = 2; page < lastPage; page++)
+                    {
+                        if (page == currentPage)
+                        {
+                            <li class="page-item active">
+                                <span class="page-link">
+                                    @currentPage
+                                    <span class="sr-only">(current)</span>
+                                </span>
+                            </li>
+                        }
+                        if (page != currentPage && page >= currentPage - 5 && page <= currentPage + 5)
+                        {
+                            <li class="page-item"><a class="page-link" href="#" onclick="changePage('@(page)')">@(page)</a></li>
+                        }
+
+                    }
+                    @if (currentPage == lastPage)
+                    {
+                        <li class="page-item active">
+                            <span class="page-link">
+                                @lastPage
+                                <span class="sr-only">(current)</span>
+                            </span>
+                        </li>
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#">Next</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="page-item"><a class="page-link" href="#" onclick="changePage('@lastPage')">@(lastPage)</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#" onclick="changePage('@(currentPage+1)')">Next</a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        }
+    </div>
+</div>
+
+
+
+
+
+<style>
+    table tr th:hover {
+        cursor: pointer;
+    }
+    .selected-order {
+        background-color: #F5F7FA;
+    }
+</style>

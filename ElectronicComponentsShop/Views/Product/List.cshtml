@@ -94,7 +94,7 @@
 <script>
     getPaginatorPartial('@Model.Page', '@Model.PageSize');
 
-    async function getPaginatorPartial(page, pageSize) {
+    async function getPaginatorPartial(page, pageSize, getData) {
         scroll({ top: 0, left: 0, behavior: 'smooth' });
         let total = await getProductGridPartial(page);
         fetch(`/Paginator/GetPaginatorPartial?page=${page}&pageSize=${pageSize}&total=${total}`).then(re => re.text()).then(data => document.getElementById('paginator-wrapper').innerHTML = data);
@@ -103,7 +103,7 @@
     function prefix(path) {
         return path.includes('?') ? '&' : '?';
     }
-
+    
     async function getProductGridPartial(page) {
         let path = getPath();
         let qs = getQueryString();

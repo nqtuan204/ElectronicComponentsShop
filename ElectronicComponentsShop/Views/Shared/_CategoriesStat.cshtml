@@ -1,0 +1,60 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE HTML>
+<html>
+<head>
+    <script>
+        function GetCategoriesStat(from, to) {
+            let form = new FormData();
+            form.append('from', from);
+            form.append('to', to);
+            fetch('/Admin/GetCategoriesStat', {
+                method: 'post',
+                body: form
+            }).then(re => re.json()).then(json => {
+                console.log(json);
+                let chart = new CanvasJS.Chart("chartContainer4", {
+                    title: {
+                        text: "Thống kê theo danh mục SP"
+                    },
+                    animationEnabled: true,
+                    legend: {
+                        verticalAlign: "center",
+                        horizontalAlign: "left",
+                        fontSize: 20,
+                        fontFamily: "Helvetica"
+                    },
+                    theme: "light2",
+                    data: [
+                        {
+                            type: "pie",
+                            indexLabelFontFamily: "Garamond",
+                            indexLabelFontSize: 20,
+                            indexLabel: "{label} {y}%",
+                            startAngle: -20,
+                            showInLegend: false,
+                            toolTipContent: "{legendText} {y}%",
+                            dataPoints: json/*[
+                                            { y: 72.48, legendText: "Google", label: "Google" },
+                                            { y: 10.39, legendText: "Bing", label: "Bing" },
+                                            { y: 7.78, legendText: "Yahoo!", label: "Yahoo!" },
+                                            { y: 7.14, legendText: "Baidu", label: "Baidu" },
+                                            { y: 0.22, legendText: "Ask", label: "Ask" },
+                                            { y: 0.15, legendText: "AOL", label: "AOL" },
+                                            { y: 1.84, legendText: "Others", label: "Others" }
+                                        ]*/
+                        }
+                    ]
+                });
+                chart.render();
+            })
+        };
+    </script>
+</head>
+<body>
+    <div id="chartContainer4" style="height: 370px; width: 100%;"></div>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+</body>
+</html>
+

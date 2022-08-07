@@ -1,164 +1,122 @@
-﻿<link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-<!------ Include the above in your HEAD tag ---------->
-
-<div class="container" style="display: flex;">
-    <nav class="navbar navbar-inverse sidebar" role="navigation">
-        <div class="container-fluid">
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
-                <ul class="nav navbar-nav">
-                    <li><a href="#" onclick="getUserInfo()">Thông tin tài khoản</a></li>
-                    <li><a href="#">Đổi mật khẩu</a></li>
-                    <li><a href="#" onclick="GetUserOrders(1,0)">Quản lý đơn hàng</a></li>
-                    <li><a href="#">Sản phẩm yêu thích</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-    <div id="user-profile-content">
-
+﻿@{ 
+    ViewData["Title"] = "Người dùng";
+    ViewBag.BCTree = new Dictionary<string, string> { { "Trang chủ", "/" },{"Người dùng","/User/Profile" } };
+}
+<div id="profile-container">
+    <!-- Sidebar -->
+    <div id="sidebar">
+        <ul class="nav">
+            <li>
+                <a href="#" id="user-info" onclick="getUserInfo()">
+                    <i class="zmdi zmdi-view-dashboard"></i> Thông tin tài khoản
+                </a>
+            </li>
+            <li>
+                <a href="#" id="change-password" onclick="selectTab('change-password')">
+                    <i class="zmdi zmdi-link"></i> Đổi mật khẩu
+                </a>
+            </li>
+            <li>
+                <a href="#" id="user-orders" onclick="GetUserOrders(1,0)">
+                    <i class="zmdi zmdi-widgets"></i> Quản lý đơn hàng
+                </a>
+            </li>
+            <li>
+                <a href="#" id="favourites" onclick="selectTab('favourites')">
+                    <i class="zmdi zmdi-calendar"></i> Sản phẩm yêu thích
+                </a>
+            </li>
+        </ul>
+    </div>
+    <!-- Content -->
+    <div id="content" style="padding-left:20px;">
+        <div id="user-profile-content"></div>
     </div>
 </div>
 
 <style>
-    body, html {
+    @@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,400i,500');
+
+    body {
+        overflow-x: hidden;
+        font-family: 'Roboto', sans-serif;
+        font-size: 16px;
+    }
+
+    /* Toggle Styles */
+    #profile-container {
+        padding-left: 250px;
+        display: flex;
+    }
+
+    #content {
+        width: 100%;
+        position: relative;
+        margin-right: 0;
+    }
+
+    /* Sidebar Styles */
+
+    #sidebar {
+        z-index: 1000;
+        left: 250px;
+        width: 250px;
         height: 100%;
+        margin-left: -250px;
+        overflow-y: auto;
+        background: #37474F;
+        -webkit-transition: all 0.5s ease;
+        -moz-transition: all 0.5s ease;
+        -o-transition: all 0.5s ease;
+        transition: all 0.5s ease;
     }
 
-    /* remove outer padding */
-    .main .row {
-        padding: 0px;
-        margin: 0px;
-    }
-
-    /*Remove rounded coners*/
-
-    nav.sidebar.navbar {
-        border-radius: 0px;
-    }
-
-    nav.sidebar, .main {
-        -webkit-transition: margin 200ms ease-out;
-        -moz-transition: margin 200ms ease-out;
-        -o-transition: margin 200ms ease-out;
-        transition: margin 200ms ease-out;
-    }
-
-    /* Add gap to nav and right windows.*/
-    .main {
-        padding: 10px 10px 0 10px;
-    }
-
-    /* .....NavBar: Icon only with coloring/layout.....*/
-
-    /*small/medium side display*/
-    @@media (min-width: 768px) {
-        /*Allow main to be next to Nav*/
-        .main {
-            position: absolute;
-            width: calc(100% - 40px); /*keeps 100% minus nav size*/
-            margin-left: 40px;
-            float: right;
-        }
-        /*lets nav bar to be showed on mouseover*/
-        nav.sidebar:hover + .main {
-            margin-left: 200px;
-        }
-        /*Center Brand*/
-        nav.sidebar.navbar.sidebar > .container .navbar-brand, .navbar > .container-fluid .navbar-brand {
-            margin-left: 0px;
-        }
-        /*Center Brand*/
-        nav.sidebar .navbar-brand, nav.sidebar .navbar-header {
+        #sidebar header {
+            background-color: #263238;
+            font-size: 20px;
+            line-height: 52px;
             text-align: center;
-            width: 100%;
-            margin-left: 0px;
         }
-        /*Center Icons*/
-        nav.sidebar a {
-            padding-right: 13px;
-        }
-        /*adds border top to first nav box */
-        nav.sidebar .navbar-nav > li:first-child {
-            border-top: 1px #e5e5e5 solid;
-        }
-        /*adds border to bottom nav boxes*/
-        nav.sidebar .navbar-nav > li {
-            border-bottom: 1px #e5e5e5 solid;
-        }
-        /* Colors/style dropdown box*/
-        nav.sidebar .navbar-nav .open .dropdown-menu {
-            position: static;
-            float: none;
-            width: auto;
-            margin-top: 0;
-            background-color: transparent;
-            border: 0;
-            -webkit-box-shadow: none;
-            box-shadow: none;
-        }
-        /*allows nav box to use 100% width*/
-        nav.sidebar .navbar-collapse, nav.sidebar .container-fluid {
-            padding: 0 0px 0 0px;
-        }
-        /*colors dropdown box text */
-        .navbar-inverse .navbar-nav .open .dropdown-menu > li > a {
-            color: #777;
-        }
-        /*gives sidebar width/height*/
-        nav.sidebar {
-            width: 200px;
-            height: 100%;
-            margin-left: -160px;
-            float: left;
-            z-index: 8000;
-            margin-bottom: 0px;
-        }
-            /*give sidebar 100% width;*/
-            nav.sidebar li {
-                width: 100%;
+
+            #sidebar header a {
+                color: #fff;
+                display: block;
+                text-decoration: none;
             }
-            /* Move nav to full on mouse over*/
-            nav.sidebar:hover {
-                margin-left: 0px;
+
+                #sidebar header a:hover {
+                    color: #fff;
+                }
+
+        #sidebar .nav {
+        }
+
+        #sidebar .nav a {
+            background: none;
+            border-bottom: 1px solid #455A64;
+            color: #CFD8DC;
+            font-size: 14px;
+            padding: 16px 24px;
+        }
+
+            #sidebar .nav a:hover {
+                background: none;
+                color: #fff;
             }
-        /*for hiden things when navbar hidden*/
-        .forAnimate {
-            opacity: 0;
+
+        #sidebar .nav a i {
+            margin-right: 16px;
         }
-    }
-
-    /* .....NavBar: Fully showing nav bar..... */
-
-    @@media (min-width: 1330px) {
-        /*Allow main to be next to Nav*/
-        .main {
-            width: calc(100% - 200px); /*keeps 100% minus nav size*/
-            margin-left: 200px;
+        #user-info:hover {
+            color: #fff;
         }
-        /*Show all nav*/
-        nav.sidebar {
-            margin-left: 0px;
-            float: left;
+        #user-orders:hover {
+            color: #fff;
         }
-            /*Show hidden items on nav*/
-            nav.sidebar .forAnimate {
-                opacity: 1;
-            }
-    }
-
-    nav.sidebar .navbar-nav .open .dropdown-menu > li > a:hover, nav.sidebar .navbar-nav .open .dropdown-menu > li > a:focus {
-        color: #CCC;
-        background-color: transparent;
-    }
-
-    nav:hover .forAnimate {
-        opacity: 1;
-    }
-
-    section {
-        padding-left: 15px;
-    }
+        #change-password:hover {
+            color: #fff;
+        }
+        #favourites:hover {
+            color: #fff;
+        }
 </style>
