@@ -26,7 +26,7 @@ namespace ElectronicComponentsShop.Services.User
         Task<string> ResetPassword(int userId);
         Task<string> GenerateResetPasswordToken(int userId);
         bool IsPasswordMatch(int userId, string password);
-        void Update(UserDTO dto);
+        Task Update(UserDTO dto);
         int CountNewUsers(DateTime from, DateTime to);
     }
 }

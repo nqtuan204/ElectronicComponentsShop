@@ -358,6 +358,25 @@ async function getUserInfo() {
     }
 }
 
+async function updateUserInfo() {
+    let noti = document.getElementById('update-user-info-success');
+    noti.hidden = true;
+    let email = document.getElementById('user-email');
+    let phoneNumber = document.getElementById('user-phoneNumber');
+    let firstName = document.getElementById('user-firstName');
+    let lastName = document.getElementById('user-lastName');
+    let form = new FormData();
+    form.append('email', email);
+    form.append('phoneNumber', phoneNumber);
+    form.append('phoneNumber', firstName);
+    form.append('lastName', lastName);
+    await fetch('/User/UpdateUserInfo', {
+        method: 'post',
+        body: form
+    }).then(re => re);
+    noti.hidden = false;
+}
+
 async function GetUserOrders(page, orderStateId) {
     let main = document.getElementById('user-profile-content');
     if (main != null) {

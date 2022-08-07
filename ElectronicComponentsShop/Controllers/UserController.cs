@@ -177,7 +177,6 @@ namespace ElectronicComponentsShop.Controllers
             return View("ConfirmResetPassword", user.Email);
         }
 
-
         public IActionResult IsExist(string Email)
         {
             Console.WriteLine("Check if email exist!");
@@ -206,11 +205,12 @@ namespace ElectronicComponentsShop.Controllers
             return new ObjectResult(null);
         }
 
-        public ActionResult UpdateUserInfo(UserDTO dto)
+        [HttpPost]
+        public async Task<ActionResult> UpdateUserInfo(UserDTO dto)
         {
             var userId = GetUserId();
             dto.Id = userId;
-            _userSv.Update(dto);
+            await _userSv.Update(dto);
             return StatusCode(200);
         }
 

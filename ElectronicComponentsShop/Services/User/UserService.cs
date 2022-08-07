@@ -158,7 +158,7 @@ namespace ElectronicComponentsShop.Services.User
             return (password == user.Password);
         }
 
-        public void Update(UserDTO dto)
+        public async Task Update(UserDTO dto)
         {
             var user = _db.Users.Find(dto.Id);
             user.PhoneNumber = dto.PhoneNumber;
@@ -166,6 +166,7 @@ namespace ElectronicComponentsShop.Services.User
             user.FirstName = dto.FirstName;
             user.LastName = dto.LastName;
             _db.Users.Update(user);
+            await _db.SaveChangesAsync();
         }
 
         public int CountNewUsers(DateTime from, DateTime to)

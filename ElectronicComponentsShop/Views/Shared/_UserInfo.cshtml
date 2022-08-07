@@ -6,25 +6,26 @@
 
 @model UserInfoVM
 <div class="container">
-    <form asp-action="UpdateUserInfo" method="post">
+    <div>
         <div class="row" style="width: 250px; margin: 5px;">
             <label>Điện thoại:</label>
-            <input class="form-control text-info" value="@Model.PhoneNumber" style="float: right" />
+            <input class="form-control text-info" value="@Model.PhoneNumber" style="float: right" id="user-phoneNumber" />
         </div>
         <div class="row" style="width: 250px; margin: 5px;">
             <label>Email:</label>
-            <input class="form-control text-info" value="@Model.Email" style="float: right" />
+            <input class="form-control text-info" value="@Model.Email" style="float: right" id="user-email" />
         </div>
         <div class="row" style="width: 250px; margin: 5px;">
             <label>Họ:</label>
-            <input class="form-control text-info" value="@Model.LastName" style="float: right" />
+            <input class="form-control text-info" value="@Model.LastName" style="float: right" id="user-lastName" />
         </div>
         <div class="row" style="width: 250px; margin: 5px;">
             <label>Tên:</label>
-            <input class="form-control text-info" value="@Model.FirstName" style="float: right" />
+            <input class="form-control text-info" value="@Model.FirstName" style="float: right" id="user-firstName" />
         </div>
         <div class="row" style="width: 250px; margin: 15px 5px 5px">
-            <input type="submit" class="form-control" value="Cập nhật" style="background: #D10024; border:0px; color:white; float:right; width:250px;">
+            <input type="button" class="form-control" value="Cập nhật" style="background: #D10024; border:0px; color:white; float:right; width:250px;" onclick="updateUserInfo()">
         </div>
-    </form>
+    </div>
+    <p hidden id="update-user-info-success">Cập nhật thành công</p>
 </div>
