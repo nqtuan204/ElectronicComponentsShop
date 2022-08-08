@@ -350,6 +350,39 @@ $(document).ready(function () {
     });
 });
 
+async function changePassword() {
+    let noti1 = document.getElementById('change-user-password-success');
+    let noti2 = document.getElementById('invalid-user-password');
+    noti1.hidden = true;
+    noti2.hidden = true;
+    let password = document.getElementById('user-password');
+    let newPassword = document.getElementById('user-new-password');
+    let form = new FormData();
+    form.append('password', password.value);
+    form.append('newPassword', newPassword.value);
+
+    await fetch('/User/ChangePassword', {
+        method: 'post',
+        body: form
+    }).then(re => re.json()).then(json => {
+        noti1.hidden = false;
+        password.value = null;
+        newPassword.value = null;
+    }).catch(error => {
+        noti2.hidden = false;
+        password.value = null;
+        newPassword.value = null;
+    });
+}
+
+async function getUserChangePassword() {
+    let main = document.getElementById('user-profile-content');
+    if (main != null) {
+        main.innerHTML = await fetch('/User/GetChangePasswordPartial').then(re => re.text()).then(text => text);
+        selectTab('change-password');
+    }
+}
+
 async function getUserInfo() {
     let main = document.getElementById('user-profile-content');
     if (main != null) {
@@ -384,17 +417,24 @@ async function GetUserOrders(page, orderStateId) {
         main.innerHTML = await fetch(`/Order/GetUserOrdersPartial?page=${page}&orderStateId=${orderStateId}`).then(re => re.text()).then(text => text);
         selectTab('user-orders');
 
-        for (let i = 0; i < 5; i++) {
+        /*for (let i = 0; i < 5; i++) {
             if (document.getElementById(`orderStateId-${i}`).style.color == '#D10024')
                 document.getElementById(`orderStateId-${i}`).style.color = 'black';
             if (i == parseInt(orderStateId)) {
                 console.log(i);
                 document.getElementById(`orderStateId-${i}`).style.color = '#D10024';
             }
-        }
+        }*/
     }
-
 }
+
+
+async function cancelUserOrder(orderId, page, orderStateId) {
+    fetch(`/Admin/ChangeOrderState?orderId=${orderId}&orderStateId=2`).then(re => {
+        GetUserOrders(page, orderStateId);
+    });
+}
+
 function selectTab(id) {
     document.getElementById('user-info').style.color = '#CFD8DC';
     document.getElementById('favourites').style.color = '#CFD8DC';
@@ -403,6 +443,21 @@ function selectTab(id) {
     document.getElementById(id).style.color = '#fff';
 }
 getUserInfo();
+
+async function getFavProducts() {
+    let container = document.getElementById('user-profile-content');
+    if (container != null) {
+        selectTab('favourites');
+        container.innerHTML = await fetch('/User/GetFavProductsPartial').then(re => re.text()).then(text => text);        
+    }
+}
+
+async function removeFromFavProducts(productId) {
+    await fetch(`/User/RemoveFromFavourites/${productId}`).then(re => {
+        getFavProducts();
+    })
+    
+}
 // ADMIN PAGE
 window.onload = function () {
     let today = new Date();
@@ -486,9 +541,9 @@ async function updateSort(field) {
     await getOrderTable(sortBy, keyword, orderStateId);
 }
 
-getOrderTable('createdAt desc', '', 1,1);
+getOrderTable('createdAt desc', '', 1, 1);
 
-async function getOrderTable(sortBy, keyword, orderStateId,page) {
+async function getOrderTable(sortBy, keyword, orderStateId, page) {
     let form = new FormData();
     form.append('sortBy', sortBy);
     form.append('keyword', keyword);
@@ -510,7 +565,6 @@ async function selectOrderState(orderStateId) {
 }
 
 async function changeOrderState(orderId, orderStateId) {
-    console.log('change order state');
     fetch(`/Admin/ChangeOrderState?orderId=${orderId}&orderStateId=${orderStateId}`).then(re => {
         let sortBy = document.getElementById('orderTable-sortBy').innerHTML;
         let keyword = document.getElementById('orderTable-keyword').innerHTML;

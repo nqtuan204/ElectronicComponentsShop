@@ -109,6 +109,7 @@ namespace ElectronicComponentsShop.Services.Order
         {
             var order = _db.Orders.FirstOrDefault(o => o.Id == id);
             order.OrderStateId = orderStateId;
+            order.ModifiedAt = DateTime.Now;
             await _db.SaveChangesAsync();
         }
     }

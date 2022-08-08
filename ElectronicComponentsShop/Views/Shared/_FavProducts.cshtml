@@ -1,0 +1,41 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    var i = 0;
+
+}
+
+@model IEnumerable<ProductVM>
+@if (Model.Count() == 0)
+{
+    <h2>Không có sản phẩm nào.</h2>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <td><strong>#</strong></td>
+        <td><strong>Tên SP</strong></td>
+        <td><strong>Hình ảnh</strong></td>
+        <td><strong>Giá</strong></td>
+        <td><strong>Thao tác</strong></td>
+        </thead>
+        <tbody>
+            @foreach (var product in Model)
+            {
+                i++;
+                <tr style="padding: 0 15px;">
+                    <td>@i</td>
+                    <td>@product.Name</td>
+                    <td><img src="@product.ThumbnailURL" style="width:100px;" /></td>
+                    <td>@product.FormattedPrice</td>
+                    <td>
+                        <a class="btn" href="@product.URL">Xem chi tiết</a>
+                        <a class="btn" onclick="removeFromFavProducts('@product.Id')">Xóa</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}   

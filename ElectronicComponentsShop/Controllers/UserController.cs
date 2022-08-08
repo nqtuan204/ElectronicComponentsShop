@@ -192,17 +192,14 @@ namespace ElectronicComponentsShop.Controllers
 
         public ActionResult GetChangePasswordPartial()
         {
-            return new ObjectResult(null);
+            return PartialView("_ChangePassword");
         }
 
-        public ActionResult GetUserOrdersPartial()
+        public ActionResult GetFavProductsPartial()
         {
-            return new ObjectResult(null);
-        }
-
-        public ActionResult GetFavProducts()
-        {
-            return new ObjectResult(null);
+            var userId = GetUserId();
+            var favProducts = _userSv.GetFavProducts(userId).Select(p => new ProductVM(p));
+            return PartialView("_FavProducts", favProducts);
         }
 
         [HttpPost]
@@ -214,6 +211,7 @@ namespace ElectronicComponentsShop.Controllers
             return StatusCode(200);
         }
 
+        [HttpPost]
         public ActionResult ChangePassword(string password, string newPassword)
         {
             var userId = GetUserId();

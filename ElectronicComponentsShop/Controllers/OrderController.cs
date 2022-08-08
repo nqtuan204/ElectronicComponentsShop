@@ -69,6 +69,7 @@ namespace ElectronicComponentsShop.Controllers
         {
             var userId = GetUserId();
             var userOrders = _orderSv.GetUserOrders(userId, page, orderStateId);
+            ViewBag.OrderStateId = orderStateId;
             return PartialView("_UserOrders", userOrders);
         }
         // GET: OrderController/Details/5
