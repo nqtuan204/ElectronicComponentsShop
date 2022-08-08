@@ -398,7 +398,6 @@ async function updateUserInfo() {
     let phoneNumber = document.getElementById('user-phoneNumber').value;
     let firstName = document.getElementById('user-firstName').value;
     let lastName = document.getElementById('user-lastName').value;
-    console.log(firstName);
     let form = new FormData();
     form.append('email', email);
     form.append('phoneNumber', phoneNumber);

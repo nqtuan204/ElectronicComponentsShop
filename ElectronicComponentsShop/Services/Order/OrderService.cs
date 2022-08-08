@@ -35,7 +35,7 @@ namespace ElectronicComponentsShop.Services.Order
 
         public IEnumerable<UserOrderDTO> GetUserOrders(int userId, int page, int orderStateId)
         {
-            var userOrders = from o in _db.Orders select o;
+            var userOrders = from o in _db.Orders where o.UserId==userId select o;
             if (orderStateId > 0)
                 userOrders = userOrders.Where(o => o.OrderStateId == orderStateId);
             return userOrders.AsSplitQuery().Include(o => o.OrderState).Include(o => o.Items).ThenInclude(i => i.Product).OrderByDescending(o => o.CreatedAt).Skip(0).Take(5 * page).Select(o => new UserOrderDTO(o));

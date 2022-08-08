@@ -22,7 +22,7 @@
                 @if (!String.IsNullOrEmpty(UserName))
                 {
                     <li><a href="/User/Profile"><i class="fa fa-user-o"></i> @UserName</a></li>
-                    <li><a href="/User/Logout"> Đăng xuất</a></li>
+                    <li><a href="/User/Logout" onclick="window.sessionStorage.clear()"> Đăng xuất</a></li>
                 }
                 else
                 {
