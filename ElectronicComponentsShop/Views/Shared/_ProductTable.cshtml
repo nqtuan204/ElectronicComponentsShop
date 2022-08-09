@@ -3,7 +3,6 @@
 
 *@
 @{
-    Layout = "_AdminLayout";
     string[] Categories = new string[] { "Tất cả", "Vi Điều Khiển - Nhúng", "Module Ứng Dụng", "Cảm Biến", "Linh Kiện Điện Tử", "IC Chức Năng", "Thiết Bị Chế Tạo", "Dụng Cụ, Phụ Kiện", "Connector", "Sản Phẩm Combi - DIY", "Phụ Kiện Điện Thoại" };
 
 
@@ -24,11 +23,8 @@
 
 <div class="x_panel">
     <div class="x_title">
-        <h2>Quản lý đơn hàng</h2>
+        <h2>Quản lý sản phẩm</h2>
         <ul class="nav navbar-right panel_toolbox">
-            <li>
-                <a onclick="selectCategory(0)" class="@(ViewBag.categoryId==0?"selected-category":"")">Tất cả</a>
-            </li>
             @for (int i = 0; i <= 10; i++)
             {
                 <li>
@@ -36,7 +32,7 @@
                 </li>
             }
             <li>
-                <input type="text" class="input" placeholder="Tìm kiếm" oninput="updateKeyword(this)" value="@ViewBag.keyword" />
+                <input type="text" class="input" placeholder="Tìm kiếm" oninput="updateKeywordProductTable(this)" value="@ViewBag.keyword" />
             </li>
         </ul>
         <div class="clearfix"></div>
@@ -45,12 +41,12 @@
         <table id="example" class="table table-striped table-bordered" style="width:100%">
             <thead>
                 <tr>
-                    <th onclick="updateSort('productId')">Mã sản phẩm @Html.Raw(GetPostfix("productId"))</th>
-                    <th onclick="updateSort('createdAt')">Ngày tạo @Html.Raw(@GetPostfix("createdAt"))</th>
-                    <th onclick="updateSort('modifiedAt')">Lần cập nhật cuối @Html.Raw(GetPostfix("modifiedAt"))</th>
-                    <th onclick="updateSort('category')">Danh mục SP @Html.Raw(GetPostfix("category"))</th>
-                    <th onclick="updateSort('price')">Giá @Html.Raw(GetPostfix("price"))</th>
-                    <th onclick="updateSort('thumbnail')">Hình ảnh</th>
+                    <th onclick="updateSortProductTable('productId')">Mã sản phẩm @Html.Raw(GetPostfix("productId"))</th>
+                    <th onclick="updateSortProductTable('name')">Ngày tạo @Html.Raw(@GetPostfix("name"))</th>
+                    <th onclick="updateSortProductTable('createdAt')">Ngày tạo @Html.Raw(@GetPostfix("createdAt"))</th>
+                    <th onclick="updateSortProductTable('category')">Danh mục SP @Html.Raw(GetPostfix("category"))</th>
+                    <th onclick="updateSortProductTable('price')">Giá @Html.Raw(GetPostfix("price"))</th>
+                    <th>Hình ảnh</th>
                     <td>Thao tác</td>
                 </tr>
             </thead>
@@ -59,12 +55,16 @@
                 {
                     <tr>
                         <td>@row.Id</td>
+                        <td>@row.Name</td>
                         <td>@row.CreatedAt</td>
-                        <td>@row.ModifiedAt</td>
                         <td>@row.Category</td>
                         <td>@row.Price</td>
                         <td>
                             <img src="@row.ThumbnailURL" style="width:100px;" />
+                        </td>
+                        <td>
+                            <button class="btn">Xóa</button>
+                            <button class="btn">Sửa</button>
                         </td>
                     </tr>
                 }
@@ -94,7 +94,7 @@
                     else
                     {
                         <li class="page-item">
-                            <a class="page-link" onclick="changePage('@(currentPage-1)')" href="#">Previous</a>
+                            <a class="page-link" onclick="changeProductPage('@(currentPage-1)')" href="#">Previous</a>
                         </li>
                         <li class="page-item"><a class="page-link" href="#">1</a></li>
                     }
@@ -111,7 +111,7 @@
                         }
                         if (page != currentPage && page >= currentPage - 5 && page <= currentPage + 5)
                         {
-                            <li class="page-item"><a class="page-link" href="#" onclick="changePage('@(page)')">@(page)</a></li>
+                            <li class="page-item"><a class="page-link" href="#" onclick="changeProductPage('@(page)')">@(page)</a></li>
                         }
 
                     }
@@ -129,9 +129,9 @@
                     }
                     else
                     {
-                        <li class="page-item"><a class="page-link" href="#" onclick="changePage('@lastPage')">@(lastPage)</a></li>
+                        <li class="page-item"><a class="page-link" href="#" onclick="changeProductPage('@lastPage')">@(lastPage)</a></li>
                         <li class="page-item">
-                            <a class="page-link" href="#" onclick="changePage('@(currentPage+1)')">Next</a>
+                            <a class="page-link" href="#" onclick="changeProductPage('@(currentPage+1)')">Next</a>
                         </li>
                     }
                 </ul>

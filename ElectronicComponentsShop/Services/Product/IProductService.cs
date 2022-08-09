@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ElectronicComponentsShop.DTOs;
+using ElectronicComponentsShop.Models;
 
 namespace ElectronicComponentsShop.Services.Product
 {
@@ -20,5 +21,7 @@ namespace ElectronicComponentsShop.Services.Product
         IEnumerable<ReviewDTO> GetPagedReviews(int id, int page);
         IEnumerable<ProductDTO> GetRelatedProducts(int id, int categoryId);
         Task CreateReview(NewReviewDTO newReview);
+        int CountProducts(string keyword, int categoryId);
+        IList<ProductDataVM> GetProductsData(string sortBy, string keyword, int categoryId, int page);
     }
 }

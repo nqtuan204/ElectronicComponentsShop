@@ -34,7 +34,7 @@
                 <a onclick="selectOrderState(2)" class="@(ViewBag.orderStateId==2?"selected-order":"")">Đã hủy</a>
             </li>
             <li>
-                <input type="text" class="input" placeholder="Tìm kiếm" oninput="updateKeyword(this)" value="@ViewBag.keyword" />
+                <input type="text" class="input" placeholder="Tìm kiếm" oninput="updateKeywordOrderTable(this)" value="@ViewBag.keyword" />
             </li>
         </ul>
         <div class="clearfix"></div>
@@ -43,12 +43,12 @@
         <table id="example" class="table table-striped table-bordered" style="width:100%">
             <thead>
                 <tr>
-                    <th onclick="updateSort('orderId')">Mã đơn hàng @Html.Raw(GetPostfix("orderId"))</th>
-                    <th onclick="updateSort('createdAt')">Ngày tạo @Html.Raw(@GetPostfix("createdAt"))</th>
-                    <th onclick="updateSort('modifiedAt')">Lần cập nhật cuối @Html.Raw(GetPostfix("modifiedAt"))</th>
-                    <th onclick="updateSort('userId')">Mã khách hàng @Html.Raw(GetPostfix("userId"))</th>
-                    <th onclick="updateSort('orderStateId')">Trạng thái @Html.Raw(GetPostfix("orderStateId"))</th>
-                    <th onclick="updateSort('paymentTypeId')">Hình thức thanh toán @Html.Raw(GetPostfix("paymentTypeId"))</th>
+                    <th onclick="updateSortOrderTable('orderId')">Mã đơn hàng @Html.Raw(GetPostfix("orderId"))</th>
+                    <th onclick="updateSortOrderTable('createdAt')">Ngày tạo @Html.Raw(@GetPostfix("createdAt"))</th>
+                    <th onclick="updateSortOrderTable('modifiedAt')">Lần cập nhật cuối @Html.Raw(GetPostfix("modifiedAt"))</th>
+                    <th onclick="updateSortOrderTable('userId')">Mã khách hàng @Html.Raw(GetPostfix("userId"))</th>
+                    <th onclick="updateSortOrderTable('orderStateId')">Trạng thái @Html.Raw(GetPostfix("orderStateId"))</th>
+                    <th onclick="updateSortOrderTable('paymentTypeId')">Hình thức thanh toán @Html.Raw(GetPostfix("paymentTypeId"))</th>
                     <th>Địa chỉ @Html.Raw(GetPostfix("address"))</th>
                     <td>Thao tác</td>
                 </tr>
@@ -105,7 +105,7 @@
                     else
                     {
                         <li class="page-item">
-                            <a class="page-link" onclick="changePage('@(currentPage-1)')" href="#">Previous</a>
+                            <a class="page-link" onclick="changeOrderPage('@(currentPage-1)')" href="#">Previous</a>
                         </li>
                         <li class="page-item"><a class="page-link" href="#">1</a></li>
                     }
@@ -122,7 +122,7 @@
                         }
                         if (page != currentPage && page >= currentPage - 5 && page <= currentPage + 5)
                         {
-                            <li class="page-item"><a class="page-link" href="#" onclick="changePage('@(page)')">@(page)</a></li>
+                            <li class="page-item"><a class="page-link" href="#" onclick="changeOrderPage('@(page)')">@(page)</a></li>
                         }
 
                     }
@@ -140,9 +140,9 @@
                     }
                     else
                     {
-                        <li class="page-item"><a class="page-link" href="#" onclick="changePage('@lastPage')">@(lastPage)</a></li>
+                        <li class="page-item"><a class="page-link" href="#" onclick="changeOrderPage('@lastPage')">@(lastPage)</a></li>
                         <li class="page-item">
-                            <a class="page-link" href="#" onclick="changePage('@(currentPage+1)')">Next</a>
+                            <a class="page-link" href="#" onclick="changeOrderPage('@(currentPage+1)')">Next</a>
                         </li>
                     }
                 </ul>

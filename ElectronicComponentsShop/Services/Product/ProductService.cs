@@ -7,6 +7,7 @@ using ElectronicComponentsShop.Entities;
 using ElectronicComponentsShop.DTOs;
 using ElectronicComponentsShop.Database;
 using Microsoft.EntityFrameworkCore;
+using ElectronicComponentsShop.Models;
 
 namespace ElectronicComponentsShop.Services.Product
 {
@@ -151,5 +152,56 @@ namespace ElectronicComponentsShop.Services.Product
             await _db.SaveChangesAsync();
         }
 
+        public int CountProducts(string keyword, int categoryId)
+        {
+            var products = from p in _db.Products select p;
+            if (!String.IsNullOrEmpty(keyword))
+                products = products.Where(p => p.Name.StartsWith(keyword));
+            if (categoryId > 0 && categoryId <= 10)
+                products = products.Where(p => p.CategoryId == categoryId);
+            return products.Count();
+        }
+
+        public IList<ProductDataVM> GetProductsData(string sortBy, string keyword, int categoryId, int page)
+        {
+            var products = (from p in _db.Products select p).Include(p => p.Category).AsQueryable();
+
+            if (!String.IsNullOrEmpty(sortBy))
+            {
+                if (sortBy.Contains("asc"))
+                {
+                    products = products.OrderBy(p => p.CreatedAt);
+                    if (sortBy.Contains("productId"))
+                        products = products.OrderBy(p => p.Id);
+                    if (sortBy.Contains("name"))
+                        products = products.OrderBy(p => p.ModifiedAt);
+                    if (sortBy.Contains("category"))
+                        products = products.OrderBy(p => p.Category.Name);
+                    if (sortBy.Contains("price"))
+                        products = products.OrderBy(p => p.Price);
+                }
+                else
+                {
+                    products = products.OrderByDescending(p => p.CreatedAt);
+                    if (sortBy.Contains("productId"))
+                        products = products.OrderByDescending(p => p.Id);
+                    if (sortBy.Contains("name"))
+                        products = products.OrderByDescending(p => p.ModifiedAt);
+                    if (sortBy.Contains("category"))
+                        products = products.OrderByDescending(p => p.Category.Name);
+                    if (sortBy.Contains("price"))
+                        products = products.OrderByDescending(p => p.Price);
+                }
+
+            }
+
+            if (!String.IsNullOrEmpty(keyword))
+                products = _db.Products.Where(p => p.Name.StartsWith(keyword));
+            if (categoryId > 0 && categoryId <= 10)
+                products = products.Where(p => p.CategoryId == categoryId);
+            Console.WriteLine(products.Count());
+            return products.Include(p=>p.Category).Select(p => new ProductDataVM(p)).Skip((page - 1) * 30).Take(30).ToList();
+
+        }
     }
 }

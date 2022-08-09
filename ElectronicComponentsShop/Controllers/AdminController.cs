@@ -11,6 +11,7 @@ using ElectronicComponentsShop.Services.Order;
 using ElectronicComponentsShop.Services.User;
 using ElectronicComponentsShop.Services.Product;
 using ElectronicComponentsShop.Services.Stat;
+using ElectronicComponentsShop.DTOs;
 
 namespace ElectronicComponentsShop.Controllers
 {
@@ -190,6 +191,19 @@ namespace ElectronicComponentsShop.Controllers
         {
             await _orderSv.ChangeOrderState(orderId, orderStateId);
             return StatusCode(200);
+        }
+
+        [Authorize(policy: "OnlyAdmin")]
+        [HttpPost]
+        public IActionResult GetProductTablePartial(string sortBy = "createdAt desc", string keyword = "", int categoryId = 0, int page = 1)
+        {
+            ViewBag.sortBy = sortBy;
+            ViewBag.keyword = keyword;
+            ViewBag.orderStateId = categoryId;
+            ViewBag.total = _productSv.CountProducts(keyword, categoryId);
+            ViewBag.page = page;
+            var products = _productSv.GetProductsData(sortBy, keyword, categoryId,page);
+            return PartialView("_ProductTable", products);
         }
 
         [Authorize(policy: "OnlyAdmin")]

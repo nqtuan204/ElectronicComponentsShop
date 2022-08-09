@@ -364,7 +364,7 @@ async function changePassword() {
     await fetch('/User/ChangePassword', {
         method: 'post',
         body: form
-    }).then(re=>re).then(re => {
+    }).then(re => re).then(re => {
         if (!re.ok)
             throw new Error("not success");
         noti1.hidden = false;
@@ -440,7 +440,7 @@ async function getFavProducts() {
     let container = document.getElementById('user-profile-content');
     if (container != null) {
         selectTab('favourites');
-        container.innerHTML = await fetch('/User/GetFavProductsPartial').then(re => re.text()).then(text => text);        
+        container.innerHTML = await fetch('/User/GetFavProductsPartial').then(re => re.text()).then(text => text);
     }
 }
 
@@ -448,7 +448,7 @@ async function removeFromFavProducts(productId) {
     await fetch(`/User/RemoveFromFavourites/${productId}`).then(re => {
         getFavProducts();
     })
-    
+
 }
 // ADMIN PAGE
 window.onload = function () {
@@ -515,14 +515,14 @@ async function updateStats(from, to) {
     GetCategoriesStat(from, to);
 }
 
-async function updateKeyword(el) {
+async function updateKeywordOrderTable(el) {
     let sortBy = document.getElementById('orderTable-sortBy').innerHTML;
     let orderStateId = document.getElementById('orderTable-orderStateId').innerHTML;
     let keyword = el.value;
     await getOrderTable(sortBy, keyword, orderStateId);
 }
 
-async function updateSort(field) {
+async function updateSortOrderTable(field) {
     let keyword = document.getElementById('orderTable-keyword').innerHTML;
     let orderStateId = document.getElementById('orderTable-orderStateId').innerHTML;
     let direction = 'desc';
@@ -541,7 +541,7 @@ async function getOrderTable(sortBy, keyword, orderStateId, page) {
     form.append('keyword', keyword);
     form.append('orderStateId', orderStateId);
     form.append('page', page);
-    let container = document.getElementById('data-table-container');
+    let container = document.getElementById('order-table-container');
     let orderTable = await fetch('/Admin/GetOrderTablePartial', {
         method: 'post',
         body: form
@@ -577,11 +577,52 @@ async function selectCategory(categoryId) {
     let keyword = document.getElementById('productTable-keyword').innerHTML;
     getProductTable(sortBy, keyword, categoryId);
 }
+getProductTable('createdAt desc', '', 0, 1);
+async function getProductTable(sortBy, keyword, categoryId, page) {
+    let form = new FormData();
+    form.append('sortBy', sortBy);
+    form.append('keyword', keyword);
+    form.append('categoryId', categoryId);
+    form.append('page', page);
+    let container = document.getElementById('product-table-container');
+    let productTable = await fetch('/Admin/GetProductTablePartial', {
+        method: 'post',
+        body: form
 
+    }).then(re => re.text()).then(text => text);
+    container.innerHTML = productTable;
+}
 
+async function updateSortProductTable(field) {
+    let keyword = document.getElementById('productTable-keyword').innerHTML;
+    let categoryId = document.getElementById('productTable-categoryId').innerHTML;
+    let direction = 'desc';
+    let currentSortBy = document.getElementById('productTable-sortBy').innerHTML;
+    console.log(keyword);
+    console.log(categoryId);
+    console.log(currentSortBy);
+    if (currentSortBy.includes(field))
+        direction = currentSortBy.includes('desc') ? 'asc' : 'desc';
+    let sortBy = `${field} ${direction}`;
+    await getProductTable(sortBy, keyword, categoryId);
+}
 
+async function updateKeywordProductTable(el) {
 
+    let sortBy = document.getElementById('productTable-sortBy').innerHTML;
+    let categoryId = document.getElementById('productTable-categoryId').innerHTML;
+    let keyword = el.value;
+    console.log(keyword);
+    await getProductTable(sortBy, keyword, categoryId, 1);
+}
 
+async function changeProductPage(page) {
+    console.log(page);
+    let sortBy = document.getElementById('productTable-sortBy').innerHTML;
+    let keyword = document.getElementById('productTable-keyword').innerHTML;
+    let categoryId = document.getElementById('productTable-categoryId').innerHTML;
+    await getProductTable(sortBy, keyword, categoryId, page);
+}
 
 $('#reportrange').on('apply.daterangepicker', function (ev, picker) {
     updateStats(new Date(picker.startDate).toISOString(), new Date(picker.endDate).toISOString());
