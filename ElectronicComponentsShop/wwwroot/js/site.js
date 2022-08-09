@@ -364,7 +364,9 @@ async function changePassword() {
     await fetch('/User/ChangePassword', {
         method: 'post',
         body: form
-    }).then(re => re.json()).then(json => {
+    }).then(re=>re).then(re => {
+        if (!re.ok)
+            throw new Error("not success");
         noti1.hidden = false;
         password.value = null;
         newPassword.value = null;
@@ -415,15 +417,6 @@ async function GetUserOrders(page, orderStateId) {
     if (main != null) {
         main.innerHTML = await fetch(`/Order/GetUserOrdersPartial?page=${page}&orderStateId=${orderStateId}`).then(re => re.text()).then(text => text);
         selectTab('user-orders');
-
-        /*for (let i = 0; i < 5; i++) {
-            if (document.getElementById(`orderStateId-${i}`).style.color == '#D10024')
-                document.getElementById(`orderStateId-${i}`).style.color = 'black';
-            if (i == parseInt(orderStateId)) {
-                console.log(i);
-                document.getElementById(`orderStateId-${i}`).style.color = '#D10024';
-            }
-        }*/
     }
 }
 
@@ -572,12 +565,23 @@ async function changeOrderState(orderId, orderStateId) {
     });
 }
 
-async function changePage(page) {
+async function changeOrderPage(page) {
     let sortBy = document.getElementById('orderTable-sortBy').innerHTML;
     let keyword = document.getElementById('orderTable-keyword').innerHTML;
     let orderStateId = document.getElementById('orderTable-orderStateId').innerHTML;
     await getOrderTable(sortBy, keyword, orderStateId, page);
 }
+
+async function selectCategory(categoryId) {
+    let sortBy = document.getElementById('productTable-sortBy').innerHTML;
+    let keyword = document.getElementById('productTable-keyword').innerHTML;
+    getProductTable(sortBy, keyword, categoryId);
+}
+
+
+
+
+
 
 $('#reportrange').on('apply.daterangepicker', function (ev, picker) {
     updateStats(new Date(picker.startDate).toISOString(), new Date(picker.endDate).toISOString());

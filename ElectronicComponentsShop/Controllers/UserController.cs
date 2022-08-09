@@ -212,12 +212,12 @@ namespace ElectronicComponentsShop.Controllers
         }
 
         [HttpPost]
-        public ActionResult ChangePassword(string password, string newPassword)
+        public async Task<ActionResult> ChangePassword(string password, string newPassword)
         {
             var userId = GetUserId();
             if (_userSv.IsPasswordMatch(userId, password))
             {
-                _userSv.ChangePassword(userId, newPassword);
+                await _userSv.ChangePassword(userId, newPassword);
                 return StatusCode(200);
             }
             return StatusCode(404);

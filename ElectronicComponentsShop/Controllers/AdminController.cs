@@ -160,7 +160,14 @@ namespace ElectronicComponentsShop.Controllers
             }
         }
 
+        [Authorize(policy: "OnlyAdmin")]
         public IActionResult OrderManagement()
+        {
+            return View();
+        }
+
+        [Authorize(policy: "OnlyAdmin")]
+        public IActionResult ProductManagement()
         {
             return View();
         }
