@@ -11,7 +11,9 @@ using ElectronicComponentsShop.Services.Order;
 using ElectronicComponentsShop.Services.User;
 using ElectronicComponentsShop.Services.Product;
 using ElectronicComponentsShop.Services.Stat;
+using ElectronicComponentsShop.Services.Category;
 using ElectronicComponentsShop.DTOs;
+using Microsoft.AspNetCore.Http;
 
 namespace ElectronicComponentsShop.Controllers
 {
@@ -22,19 +24,41 @@ namespace ElectronicComponentsShop.Controllers
         private readonly IUserService _userService;
         private readonly IProductService _productSv;
         private readonly IStatService _statSv;
+        private readonly ICategoryService _categorySv;
 
-        public AdminController(Database.ECSDbContext db, IOrderService orderSv, IUserService userService, IProductService productSv, IStatService statSv)
+        public AdminController(Database.ECSDbContext db, IOrderService orderSv, IUserService userService, IProductService productSv, IStatService statSv, ICategoryService categorySv)
         {
             _db = db;
             _orderSv = orderSv;
             _userService = userService;
             _productSv = productSv;
             _statSv = statSv;
+            _categorySv = categorySv;
         }
 
         [Authorize(policy: "OnlyAdmin")]
         public IActionResult Index()
         {
+            return View();
+        }
+
+        public IActionResult CreateProduct()
+        {
+            ViewBag.Categories = _categorySv.GetCategories();
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateProduct([FromForm] IFormFile Thumbnail, NewProduct newProduct)
+        {
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", Thumbnail.FileName);
+            using (var fs = new FileStream(path, FileMode.Create))
+            {
+                await Thumbnail.CopyToAsync(fs);
+            }
+            newProduct.ThumbnailURL = $"/images/{Thumbnail.FileName}";
+            await _productSv.CreateProduct(newProduct);
+            ViewBag.Categories = _categorySv.GetCategories();
             return View();
         }
 
@@ -202,7 +226,7 @@ namespace ElectronicComponentsShop.Controllers
             ViewBag.orderStateId = categoryId;
             ViewBag.total = _productSv.CountProducts(keyword, categoryId);
             ViewBag.page = page;
-            var products = _productSv.GetProductsData(sortBy, keyword, categoryId,page);
+            var products = _productSv.GetProductsData(sortBy, keyword, categoryId, page);
             return PartialView("_ProductTable", products);
         }
 

@@ -199,9 +199,15 @@ namespace ElectronicComponentsShop.Services.Product
                 products = _db.Products.Where(p => p.Name.StartsWith(keyword));
             if (categoryId > 0 && categoryId <= 10)
                 products = products.Where(p => p.CategoryId == categoryId);
-            Console.WriteLine(products.Count());
-            return products.Include(p=>p.Category).Select(p => new ProductDataVM(p)).Skip((page - 1) * 30).Take(30).ToList();
+            return products.Include(p => p.Category).Select(p => new ProductDataVM(p)).Skip((page - 1) * 30).Take(30).ToList();
 
+        }
+
+        public async Task CreateProduct(NewProduct newProduct)
+        {
+            var product = new Entities.Product(newProduct);
+            await _db.Products.AddAsync(product);
+            await _db.SaveChangesAsync();
         }
     }
 }

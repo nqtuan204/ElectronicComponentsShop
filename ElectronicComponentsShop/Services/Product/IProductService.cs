@@ -23,5 +23,7 @@ namespace ElectronicComponentsShop.Services.Product
         Task CreateReview(NewReviewDTO newReview);
         int CountProducts(string keyword, int categoryId);
         IList<ProductDataVM> GetProductsData(string sortBy, string keyword, int categoryId, int page);
+
+        Task CreateProduct(NewProduct newProduct);
     }
 }

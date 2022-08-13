@@ -1,0 +1,76 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_AdminLayout";
+    var Categories = ViewBag.Categories;
+}
+
+
+
+<div class="right_col" role="main">
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>Thêm sản phẩm</h2>
+            <ul class="nav navbar-right panel_toolbox">
+                <li>
+                    <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>
+                            <a href="#">Settings 1</a>
+                        </li>
+                        <li>
+                            <a href="#">Settings 2</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a class="close-link"><i class="fa fa-close"></i></a>
+                </li>
+            </ul>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            <br>
+            <form class="form-horizontal form-label-left input_mask">
+
+                <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
+                    <input type="text" class="form-control" id="inputSuccess2" placeholder="Tên sản phẩm" name="Name">
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
+                    <input type="number" class="form-control" id="inputSuccess3" placeholder="Giá" name="Price">
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
+                    <input type="text" class="form-control" id="inputSuccess4" placeholder="Mô tả" name="Description">
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
+                    <select name="CategoryId" class="form-control">
+                        @foreach (var Category in Categories)
+                        {
+                            <option value="@Category.Id">@Category.Name</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="control- col-xs-12 form-group has-feedback">File ảnh</label>
+                    <div class="col-md-9 col-sm-9 col-xs-12 form-group has-feedback">
+                        <input type="file" class="form-control" placeholder="Default Input" name="Thumbnail">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-9 col-sm-9 col-xs-12">
+                        <button type="submit" class="btn btn-success">Thêm</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
