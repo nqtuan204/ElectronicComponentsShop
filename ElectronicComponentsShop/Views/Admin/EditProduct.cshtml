@@ -4,14 +4,15 @@
 @{
     Layout = "_AdminLayout";
     var Categories = ViewBag.Categories;
+    var Id = ViewBag.Id;
 }
 
-
+@model NewProductVM
 
 <div class="right_col" role="main">
     <div class="x_panel">
         <div class="x_title">
-            <h2>Thêm sản phẩm</h2>
+            <h2>Sửa sản phẩm</h2>
             <ul class="nav navbar-right panel_toolbox">
                 <li>
                     <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
@@ -35,25 +36,24 @@
         </div>
         <div class="x_content">
             <br>
-            <form class="form-horizontal form-label-left input_mask" method="post" action="/Admin/CreateProduct" enctype="multipart/form-data">
-
+            <form class="form-horizontal form-label-left input_mask" method="post" action="/Admin/EditProduct/@Id" enctype="multipart/form-data">
                 <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
-                    <input type="text" class="form-control" id="inputSuccess2" placeholder="Tên sản phẩm" name="Name">
+                    <input type="text" class="form-control" id="inputSuccess2" placeholder="Tên sản phẩm" name="Name" value="@Model.Name">
                 </div>
 
                 <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
-                    <input type="number" class="form-control" id="inputSuccess3" placeholder="Giá" name="Price">
+                    <input type="number" class="form-control" id="inputSuccess3" placeholder="Giá" name="Price" value="@Model.Price">
                 </div>
 
                 <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
-                    <input type="text" class="form-control" id="inputSuccess4" placeholder="Mô tả" name="Description">
+                    <input type="text" class="form-control" id="inputSuccess4" placeholder="Mô tả" name="Description" value="@Model.Description">
                 </div>
 
                 <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
                     <select name="CategoryId" class="form-control">
                         @foreach (var Category in Categories)
                         {
-                            <option value="@Category.Id">@Category.Name</option>
+                            <option value="@Category.Id" selected="@(Model.CategoryId==Category.Id)">@Category.Name</option>
                         }
                     </select>
                 </div>
@@ -62,11 +62,12 @@
                     <label class="control- col-xs-12 form-group has-feedback">File ảnh</label>
                     <div class="col-md-9 col-sm-9 col-xs-12 form-group has-feedback">
                         <input type="file" class="form-control" placeholder="Default Input" name="Thumbnail">
+                        <img src="@Model.ThumbnailURL" width="150"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-9 col-sm-9 col-xs-12">
-                        <button type="submit" class="btn btn-success">Thêm</button>
+                        <button type="submit" class="btn btn-success">Áp dụng</button>
                     </div>
                 </div>
 

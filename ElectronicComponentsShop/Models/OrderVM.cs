@@ -9,29 +9,24 @@ namespace ElectronicComponentsShop.Models
 {
     public class OrderVM
     {
-        [Display(Name = "Mã đơn hàng")]
         public int Id { get; set; }
-        [Display(Name = "Ngày tạo")]
         public DateTime CreatedAt { get; set; }
-        [Display(Name = "Cập nhật lần cuối")]
         public DateTime? ModifiedAt { get; set; }
-        [Display(Name = "Mã khách hàng")]
-        public int UserId { get; set; }
-        [Display(Name = "Trạng thái")]
+        public string UserName { get; set; }
+        public string UserPhoneNumber { get; set; }
         public string OrderState { get; set; }
-        [Display(Name = "Hình thức thanh toán")]
         public string PaymentType { get; set; }
-        [Display(Name = "Địa chỉ")]
         public string Address { get; set; }
-        public OrderVM(int id, DateTime createdAt, DateTime modifiedAt, int userId, string orderState, string paymentType, string address)
+        public OrderVM(int id, DateTime createdAt, DateTime modifiedAt, string userName, string userPhoneNumber, string orderState, string paymentType, string address)
         {
             Id = id;
             CreatedAt = createdAt;
             ModifiedAt = modifiedAt;
-            UserId = userId;
+            UserName = userName;
             OrderState = orderState;
             PaymentType = paymentType;
             Address = address;
+            UserPhoneNumber = userPhoneNumber;
         }
 
         public OrderVM(Order order)
@@ -39,10 +34,11 @@ namespace ElectronicComponentsShop.Models
             Id = order.Id;
             CreatedAt = order.CreatedAt;
             ModifiedAt = order.ModifiedAt;
-            UserId = order.UserId;
+            UserName = $"{order.User.LastName} {order.User.FirstName}";
             OrderState = order.OrderState.Name;
             PaymentType = order.PaymentType.Name;
             Address = $"{order.Address} - {order.Ward.Name} - {order.Ward.District.Name} - {order.Ward.District.Province.Name}";
+            UserPhoneNumber = order.User.PhoneNumber;
         }
     }
 }

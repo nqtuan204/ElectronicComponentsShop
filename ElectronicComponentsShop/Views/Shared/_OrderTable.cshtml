@@ -46,7 +46,8 @@
                     <th onclick="updateSortOrderTable('orderId')">Mã đơn hàng @Html.Raw(GetPostfix("orderId"))</th>
                     <th onclick="updateSortOrderTable('createdAt')">Ngày tạo @Html.Raw(@GetPostfix("createdAt"))</th>
                     <th onclick="updateSortOrderTable('modifiedAt')">Lần cập nhật cuối @Html.Raw(GetPostfix("modifiedAt"))</th>
-                    <th onclick="updateSortOrderTable('userId')">Mã khách hàng @Html.Raw(GetPostfix("userId"))</th>
+                    <th onclick="updateSortOrderTable('userName')">Khách hàng @Html.Raw(GetPostfix("userName"))</th>
+                    <th onclick="updateSortOrderTable('userPhoneNumber')">Điện thoại @Html.Raw(GetPostfix("userPhoneNumber"))</th>
                     <th onclick="updateSortOrderTable('orderStateId')">Trạng thái @Html.Raw(GetPostfix("orderStateId"))</th>
                     <th onclick="updateSortOrderTable('paymentTypeId')">Hình thức thanh toán @Html.Raw(GetPostfix("paymentTypeId"))</th>
                     <th>Địa chỉ @Html.Raw(GetPostfix("address"))</th>
@@ -60,7 +61,8 @@
                         <td>@row.Id</td>
                         <td>@row.CreatedAt</td>
                         <td>@row.ModifiedAt</td>
-                        <td>@row.UserId</td>
+                        <td>@row.UserName</td>
+                        <td>@row.UserPhoneNumber</td>
                         <td>@row.OrderState</td>
                         <td>@row.PaymentType</td>
                         <td>@row.Address</td>

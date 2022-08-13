@@ -24,6 +24,8 @@ namespace ElectronicComponentsShop.Services.Product
         int CountProducts(string keyword, int categoryId);
         IList<ProductDataVM> GetProductsData(string sortBy, string keyword, int categoryId, int page);
 
-        Task CreateProduct(NewProduct newProduct);
+        Task CreateProduct(NewProductVM newProduct);
+        NewProductVM GetProductToEdit(int id);
+        Task EditProduct(NewProductVM p, int id);
     }
 }

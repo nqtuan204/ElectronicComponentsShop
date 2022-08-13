@@ -203,11 +203,25 @@ namespace ElectronicComponentsShop.Services.Product
 
         }
 
-        public async Task CreateProduct(NewProduct newProduct)
+        public async Task CreateProduct(NewProductVM newProduct)
         {
             var product = new Entities.Product(newProduct);
             await _db.Products.AddAsync(product);
             await _db.SaveChangesAsync();
+        }
+
+        public NewProductVM GetProductToEdit(int id)
+        {
+            return new NewProductVM(_db.Products.Find(id));
+        }
+
+        public async Task EditProduct(NewProductVM p, int id)
+        {
+            var product = _db.Products.Find(id);
+            product.CategoryId = p.CategoryId;
+            product.Name = p.Name;
+            product.Description = p.Description;
+            product.ThumbnailURL = p.ThumbnailURL;
         }
     }
 }

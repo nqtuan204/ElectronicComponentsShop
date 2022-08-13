@@ -25,12 +25,14 @@ namespace ElectronicComponentsShop.Entities
         public IEnumerable<CartItem> CartItems { get; set; }
         public IEnumerable<Review> Reviews { get; set; }
 
-        public Product() {  }
-        public Product(NewProduct product)
+        public Product() { }
+        public Product(NewProductVM product)
         {
             Name = product.Name;
             Price = product.Price;
             Slug = GetSlug(product.Name);
+            Description = product.Description;
+            CreatedAt = DateTime.Now;
             ThumbnailURL = product.ThumbnailURL;
             CategoryId = product.CategoryId;
         }

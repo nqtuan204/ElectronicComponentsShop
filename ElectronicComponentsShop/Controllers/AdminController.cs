@@ -49,7 +49,7 @@ namespace ElectronicComponentsShop.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateProduct([FromForm] IFormFile Thumbnail, NewProduct newProduct)
+        public async Task<IActionResult> CreateProduct([FromForm] IFormFile Thumbnail, NewProductVM newProduct)
         {
             string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", Thumbnail.FileName);
             using (var fs = new FileStream(path, FileMode.Create))
@@ -60,6 +60,30 @@ namespace ElectronicComponentsShop.Controllers
             await _productSv.CreateProduct(newProduct);
             ViewBag.Categories = _categorySv.GetCategories();
             return View();
+        }
+
+        public IActionResult EditProduct(int id)
+        {
+            ViewBag.Categories = _categorySv.GetCategories();
+            ViewBag.Id = id;
+            var product = _productSv.GetProductToEdit(id);
+            return View(product);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditProduct(int id, NewProductVM product, IFormFile Thumbnail)
+        {
+            if(Thumbnail != null)
+            {
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", Thumbnail.FileName);
+                using (var fs = new FileStream(path, FileMode.Create))
+                {
+                    await Thumbnail.CopyToAsync(fs);
+                }
+                product.ThumbnailURL = $"/images/{Thumbnail.FileName}";
+            }    
+            await _productSv.EditProduct(product, id);
+            return Redirect("/Admin/ProductManagement");
         }
 
         [Authorize(policy: "OnlyAdmin")]
