@@ -30,11 +30,19 @@ function cartAmount(items) {
 async function getCartItems() {
     let items = JSON.parse(window.sessionStorage.getItem('items'));
     if (items == null) {
-        items = await fetch(`/Cart/GetItems`).then(re => re.json()).then(data => data).catch(er => null);
-        if (items != null) {
-            window.sessionStorage.setItem('items', JSON.stringify(items));
-            renderSummaryCart(items);
-        }
+        await fetch(`/Cart/GetItems`).then(re => re.json()).then(data => {
+            items = data;
+            if (items != null) {
+                window.sessionStorage.setItem('items', JSON.stringify(items));
+                renderSummaryCart(items);
+            }
+            else {
+                items = [];
+                window.sessionStorage.setItem('items', JSON.stringify(items));
+            }
+                
+        }).catch(er => null);
+        
     }
     else
         renderSummaryCart(items);
