@@ -260,7 +260,5 @@ namespace ElectronicComponentsShop.Controllers
             var queries = GenQueries(new DateTime(2022, 8, 1), new DateTime(2022, 8, 5));
             return View(queries);
         }
-
-
     }
 }

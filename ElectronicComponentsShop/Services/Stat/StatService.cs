@@ -44,9 +44,9 @@ namespace ElectronicComponentsShop.Services.Stat
 
         public IEnumerable<object> GetCategoriesStat(DateTime from, DateTime to)
         {
-            var stat= _db.Categories.AsSplitQuery().Include(c => c.Products).ThenInclude(p => p.OrderItems).ThenInclude(i => i.Order).AsEnumerable().GroupBy(c => c).Select(g => new { label = g.Key.Name, legendText = g.Key.Name, y = g.Sum(c => c.Products.Sum(p => p.OrderItems.Where(i => i.Order.OrderStateId == 4 && i.Order.ModifiedAt >= from && i.Order.ModifiedAt <= to).Sum(i => i.Price * i.Quantity))) });
+            var stat = _db.Categories.AsSplitQuery().Include(c => c.Products).ThenInclude(p => p.OrderItems).ThenInclude(i => i.Order).AsEnumerable().GroupBy(c => c).Select(g => new { label = g.Key.Name, legendText = g.Key.Name, y = g.Sum(c => c.Products.Sum(p => p.OrderItems.Where(i => i.Order.OrderStateId == 4 && i.Order.ModifiedAt >= from && i.Order.ModifiedAt <= to).Sum(i => i.Price * i.Quantity))) });
             var sum = stat.Sum(e => e.y);
-            return stat.Select(e => new { y = Math.Round(e.y*100 / sum,2), label = e.label, legendText = e.legendText });
+            return stat.Select(e => new { y = sum == 0 ? 0 : Math.Round(e.y * 100 / sum, 2), label = e.label, legendText = e.legendText });
         }
     }
 }

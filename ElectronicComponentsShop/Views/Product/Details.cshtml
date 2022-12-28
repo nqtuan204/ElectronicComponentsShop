@@ -148,7 +148,10 @@
                                 <div class="row">
                                     <div id="rating-wrapper"></div>
                                     <div id="reviews-wrapper"></div>
-                                    @Html.Partial("_ReviewForm", Model.Id);
+                                    @if (ViewContext.HttpContext.User.Identity.IsAuthenticated)
+                                    {
+                                        Html.Partial("_ReviewForm", Model.Id);
+                                    }
                                 </div>
 
                                 <div id="paginator-wrapper" class="row"></div>
@@ -184,19 +187,19 @@
 
 
 <script>
-var getPaginatorPartial = (page, pageSize, total) => {
-    fetch(`/Paginator/GetPaginatorPartial?page=${page}&pageSize=${pageSize}&total=${total}`).then(re => re.text()).then(data => document.getElementById('paginator-wrapper').innerHTML = data);
-    getReviewsPartial(page);
-}
+    var getPaginatorPartial = (page, pageSize, total) => {
+        fetch(`/Paginator/GetPaginatorPartial?page=${page}&pageSize=${pageSize}&total=${total}`).then(re => re.text()).then(data => document.getElementById('paginator-wrapper').innerHTML = data);
+        getReviewsPartial(page);
+    }
 
-function getReviewsPartial(page) {
+    function getReviewsPartial(page) {
         console.log('get reviews of page ' + page);
-    fetch('/Product/GetReviewsPartial/@Model.Id?page=' + page).then(re => re.text()).then(data => document.getElementById('reviews-wrapper').innerHTML = data);
-}
+        fetch('/Product/GetReviewsPartial/@Model.Id?page=' + page).then(re => re.text()).then(data => document.getElementById('reviews-wrapper').innerHTML = data);
+    }
 
-let total = parseInt('@Model.NumOfReviews');
-if (total > 0) {
-    fetch('/Product/GetRatingPartial/@Model.Id').then(re => re.text()).then(data => document.getElementById('rating-wrapper').innerHTML = data);
-    getPaginatorPartial(1, 5, total, getReviewsPartial);
-}
+    let total = parseInt('@Model.NumOfReviews');
+    if (total > 0) {
+        fetch('/Product/GetRatingPartial/@Model.Id').then(re => re.text()).then(data => document.getElementById('rating-wrapper').innerHTML = data);
+        getPaginatorPartial(1, 5, total, getReviewsPartial);
+    }
 </script>
